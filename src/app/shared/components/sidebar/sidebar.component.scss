@@ -1,0 +1,128 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--bg-sidebar);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg) var(--spacing-md);
+  z-index: 100;
+  border-radius: 0 var(--border-radius-xl) var(--border-radius-xl) 0;
+}
+
+.sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-xl);
+  margin-top: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 18px var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.4);
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+  }
+ i {
+  font-size: 1.25rem;
+}
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: var(--spacing-md);
+}
+
+.btn-sair {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 10px var(--spacing-lg);
+  background: #4f44ef;
+  color: white;
+  border-radius: var(--border-radius-full);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  width: 100%;
+  justify-content: center;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    background: #DC2626;
+    transform: translateY(-1px);
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: var(--sidebar-collapsed);
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .profile-name, .nav-item span, .btn-sair span {
+    display: none;
+  }
+
+  .sidebar-profile {
+    justify-content: center;
+    padding: var(--spacing-sm);
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: var(--spacing-sm);
+  }
+
+  .btn-sair {
+    padding: var(--spacing-sm);
+  }
+}

@@ -1,7 +1,4 @@
-/* ============================================
-   DIGITAL HEALTH WALLET — DESIGN SYSTEM
-   Baseado no Figma do projeto
-   ============================================ */
+@import "primeicons/primeicons.css";
 
 :root {
   /* ---- Cores Primárias ---- */
@@ -49,7 +46,7 @@
   /* ---- Tipografia ---- */
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
+  --font-size-sm: 1.5rem;
   --font-size-base: 1rem;
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
@@ -65,7 +62,7 @@
   --spacing-2xl: 48px;
 
   /* ---- Layout ---- */
-  --sidebar-width: 220px;
+  --sidebar-width: 300px;
   --sidebar-collapsed: 64px;
   --header-height: 64px;
 
