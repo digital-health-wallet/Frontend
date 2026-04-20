@@ -1,5 +1,6 @@
 @import "primeicons/primeicons.css";
 
+
 :root {
   /* ---- Cores Primárias ---- */
   --color-primary: #4285F4;
@@ -16,10 +17,7 @@
   --bg-header: #D6D6E6;
   --bg-body: #E8E8E8;
 
-  /* ---- Cores de Status ---- */
-  --status-confirmada: #34C759;
-  --status-andamento: #FFD60A;
-  --status-finalizada: #34C759;
+
   --status-cancelada: #FF3B30;
 
   /* ---- Cores de Texto ---- */
@@ -46,7 +44,7 @@
   /* ---- Tipografia ---- */
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-size-xs: 0.75rem;
-  --font-size-sm: 1.5rem;
+  --font-size-sm: 1.2rem;
   --font-size-base: 1rem;
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
@@ -313,35 +311,6 @@ input, select, textarea {
   }
 }
 
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 14px;
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-
-  &.confirmada {
-    background: var(--status-confirmada);
-    color: white;
-  }
-
-  &.andamento {
-    background: var(--status-andamento);
-    color: var(--text-primary);
-  }
-
-  &.finalizada {
-    background: var(--status-finalizada);
-    color: white;
-  }
-
-  &.cancelada {
-    background: var(--status-cancelada);
-    color: white;
-  }
-}
 
 /* ---- Scrollbar ---- */
 ::-webkit-scrollbar {

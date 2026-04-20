@@ -43,7 +43,7 @@ export interface Paciente {
 }
 
 export type TipoConsulta = 'CONSULTA' | 'RETORNO' | 'EXAME' | 'EMERGENCIA';
-export type StatusAgendamento = 'A' | 'C' | 'R' | 'X';
+export type StatusAgendamento = 'CONFIRMADO' | 'AGENDADO' | 'FINALIZADO' | 'CANCELADO';
 
 export interface Agendamento {
   id?: number;
@@ -128,4 +128,5 @@ export interface AgendamentoResumo {
   hora: string;
   status: StatusAgendamento;
   favorito: boolean;
+  selecionado?: boolean;
 }

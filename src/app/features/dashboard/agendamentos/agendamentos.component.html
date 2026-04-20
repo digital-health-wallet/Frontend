@@ -1,0 +1,125 @@
+<div class="top-bar">
+  <div class="search-box">
+    <i class="pi pi-search" style="color: #9CA3AF"></i>
+    <input type="text" placeholder="Pesquisar" [(ngModel)]="termoBusca" />
+  </div>
+  <div class="logo-small">
+    <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+      <path d="M32 4L12 16v16c0 14.4 8.53 27.84 20 31.2C43.47 59.84 52 46.4 52 32V16L32 4z" fill="#1A1A2E"/>
+      <path d="M32 20v10h10M32 30H22M32 30v10" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<div class="controls-bar">
+  <div class="tab-toggle">
+    <button class="tab-btn" [class.active]="abaAtiva() === 'ativos'" (click)="abaAtiva.set('ativos')">Ativos</button>
+    <button class="tab-btn" [class.active]="abaAtiva() === 'arquivados'" (click)="abaAtiva.set('arquivados')">Arquivados</button>
+  </div>
+
+  @if (abaAtiva() === 'ativos') {
+    <div class="actions-bar">
+      <p-button label="Filtrar" icon="pi pi-filter" (onClick)="toggleFiltro($event)" />
+      <p-button label="Arquivar" icon="pi pi-inbox" (onClick)="arquivarSelecionados()" />
+      <p-button label="Novo" icon="pi pi-plus-circle" routerLink="/agendamentos/novo" />
+    </div>
+  }
+</div>
+
+<p-popover #filtroPopover>
+  <div class="filtro-panel">
+    <p class="filtro-titulo">Status</p>
+    <div class="filtro-opcoes">
+      @for (opcao of opcoesStatus; track opcao.value) {
+        <div class="filtro-item">
+          <p-checkbox
+            [ngModel]="filtroStatus()[opcao.value]"
+            [binary]="true"
+            (ngModelChange)="toggleFiltroStatus(opcao.value)"
+            [inputId]="opcao.value" />
+          <label [for]="opcao.value">{{ opcao.label }}</label>
+        </div>
+      }
+    </div>
+    <p-divider />
+    <div class="filtro-item">
+      <p-toggleswitch
+        [ngModel]="filtroFavoritos()"
+        (ngModelChange)="toggleFiltroFavoritos()"
+        inputId="favoritos" />
+      <label for="favoritos">Somente favoritos</label>
+    </div>
+    <p-button label="Limpar filtros" severity="secondary" size="small" [text]="true" (onClick)="limparFiltros()" />
+  </div>
+</p-popover>
+
+
+@if (abaAtiva() === 'ativos') {
+  <div class="agendamentos-lista">
+    @for (ag of agendamentosExibidos(); track ag.id) {
+      <div class="agendamento-card" [@cardAnim]>
+        <div class="card-left">
+          <p-checkbox [(ngModel)]="ag.selecionado" [binary]="true" />
+          <i class="star pi"
+             [ngClass]="ag.favorito ? 'pi-star-fill active' : 'pi-star'"
+             (click)="toggleFavorito(ag)">
+          </i>
+          <div class="ag-info">
+            <strong>{{ ag.especialidade }} - {{ ag.nomeClinica }}</strong>
+            <span class="ag-data">{{ ag.data }} - {{ ag.hora }}</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <a [routerLink]="['/agendamentos', ag.id, 'documentos']" class="icon-btn" title="Documentos">
+            <i class="pi pi-file" style="font-size: 1.1rem"></i>
+          </a>
+          <a [routerLink]="['/agendamentos', ag.id, 'editar']" class="icon-btn" title="Editar">
+            <i class="pi pi-pencil" style="font-size: 1.1rem"></i>
+          </a>
+          <div class="status-badge-wrapper" [ngClass]="getStatusClassById(ag.id)">
+           <p-select 
+  [options]="opcoesStatus"
+  [ngModel]="ag.status"
+  (onChange)="onStatusChange(ag, $event.value)"
+  optionLabel="label" 
+  optionValue="value"
+  styleClass="badge-select"
+  dropdownIcon="pi pi-chevron-down"
+  appendTo="body">
+</p-select>
+
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (abaAtiva() === 'arquivados') {
+  <div class="agendamentos-lista">
+    @for (ag of agendamentosArquivados(); track ag.id) {
+      <div class="agendamento-card" [@cardAnim]>
+        <div class="card-left">
+          <div class="ag-info">
+            <strong>{{ ag.especialidade }} - {{ ag.nomeClinica }}</strong>
+            <span class="ag-data">{{ ag.data }} - {{ ag.hora }}</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="status-badge-wrapper" [ngClass]="getStatusClassById(ag.id)">
+            <p-select 
+  [options]="opcoesStatus"
+  [ngModel]="ag.status"
+  (onChange)="onStatusChange(ag, $event.value)"
+  optionLabel="label" 
+  optionValue="value"
+  styleClass="badge-select"
+  dropdownIcon="pi pi-chevron-down"
+  appendTo="body">
+</p-select>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
