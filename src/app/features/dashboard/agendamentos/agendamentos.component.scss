@@ -96,7 +96,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  width: 260px; // espaço fixo para ícones + badge
+  width: 260px; 
   flex-shrink: 0;
   justify-content: flex-end;
 }
@@ -262,41 +262,39 @@
 
 @media (max-width: 768px) {
   
-  /* 1. Header e Logo */
   .top-bar {
-    flex-direction: column-reverse; /* Joga a logo pra cima e a busca pra baixo */
+    flex-direction: column-reverse;
     align-items: stretch;
     gap: var(--spacing-md);
   }
 
   .logo-small {
-    align-self: center; /* Centraliza a logo no mobile */
+    align-self: center; 
   }
 
-  /* 2. Botões de Ação */
+
   .actions-bar {
-    flex-wrap: wrap; /* Permite que os botões caiam para a linha de baixo se não couberem */
-    gap: 8px; /* Espaço um pouco menor no celular */
+    flex-wrap: wrap; 
+    gap: 8px; 
   }
 
   .actions-bar .btn-outline {
-    flex: 1 1 auto; /* Faz os botões crescerem para preencher o espaço vazio */
-    justify-content: center; /* Centraliza o ícone e o texto dentro do botão */
-    min-width: 100px; /* Garante que não fiquem muito finos */
+    flex: 1 1 auto; 
+    justify-content: center; 
+    min-width: 100px; 
     padding: 8px 12px;
     font-size: var(--font-size-sm);
   }
 
-  /* 3. Cards de Agendamento */
   .agendamento-card {
-    flex-direction: column; /* Empilha os itens no celular */
+    flex-direction: column; 
     align-items: flex-start;
     gap: var(--spacing-md);
   }
 
   .card-right {
     width: 100%;
-    justify-content: flex-end; /* Joga os botões para a direita no celular */
+    justify-content: flex-end;
     border-top: 1px solid rgba(0,0,0,0.05);
     padding-top: var(--spacing-sm);
   }
