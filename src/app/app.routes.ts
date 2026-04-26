@@ -17,23 +17,32 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/agendamentos/agendamentos.component').then(m => m.AgendamentosComponent),
       },
-      
+       {
+        path: 'agendamentos/novo',
+        loadComponent: () =>
+          import('./features/dashboard/novo-agendamento/novo-agendamento.component').then(m => m.NovoAgendamentoComponent),
+      },
+      {
+        path: 'agendamentos/:id/editar',
+        loadComponent: () =>
+          import('./features/dashboard/editar-agendamento/editar-agendamento.component').then(m => m.EditarAgendamentoComponent),
+      },
 
       {
         path: 'contatos',
-        loadComponent: () => import('./features/dashboard/contatos/contatos.component').then(m => m.ContatosComponent),
+        loadComponent: () => import('./features/contatos/contatos.component').then(m => m.ContatosComponent),
       },
       {
         path: 'documentos',
-        loadComponent: () => import('./features/dashboard/documentos/documentos.component').then(m => m.DocumentosComponent),
+        loadComponent: () => import('./features/documentos/documentos.component').then(m => m.DocumentosComponent),
       },
       {
         path: 'prontuario',
-        loadComponent: () => import('./features/dashboard/prontuario/prontuario.component').then(m => m.ProntuarioComponent),
+        loadComponent: () => import('./features/prontuario/prontuario.component').then(m => m.ProntuarioComponent),
       },
       {
         path: 'profissionais',
-        loadComponent: () => import('./features/dashboard/profissionais/profissionais.component').then(m => m.ProfissionaisComponent),
+        loadComponent: () => import('./features/profissionais/profissionais.component').then(m => m.ProfissionaisComponent),
       },
       
       {

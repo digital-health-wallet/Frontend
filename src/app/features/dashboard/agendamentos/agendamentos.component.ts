@@ -12,12 +12,13 @@ import { DividerModule } from 'primeng/divider';
 import { TabsModule } from 'primeng/tabs';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AgendamentoService, AgendamentoResponse } from '@core/services/agendamento.service';
-
+import { DialogModule } from 'primeng/dialog';
+import { NovoAgendamentoComponent } from '../novo-agendamento/novo-agendamento.component';
 
 @Component({
   selector: 'app-agendamentos',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SelectModule, ButtonModule, CheckboxModule,  Popover, ToggleSwitchModule, DividerModule, TabsModule],
+  imports: [CommonModule, FormsModule, RouterLink, SelectModule, ButtonModule, CheckboxModule,  Popover, ToggleSwitchModule, DividerModule, TabsModule, DialogModule, NovoAgendamentoComponent],
   templateUrl: './agendamentos.component.html',
   styleUrl: './agendamentos.component.scss',
    animations: [
@@ -34,6 +35,7 @@ export class AgendamentosComponent implements OnInit {
   private agendamentoService = inject(AgendamentoService);
 
   private readonly ID_PACIENTE = 1;
+  
 
   ngOnInit() {
     this.carregarAgendamentos();
@@ -55,6 +57,16 @@ export class AgendamentosComponent implements OnInit {
   agendamentosArquivados = computed(() => this.agendamentosArquivadosSignal());
   agendamentos = signal<AgendamentoResumo[]>([]);
 
+  exibirModal = signal(false);
+
+  abrirModal() {
+    this.exibirModal.set(true);
+  }
+
+  fecharModalERecarregar() {
+    this.exibirModal.set(false); 
+    this.carregarAgendamentos(); 
+  }
 
   toggleFiltro(event: Event) {
     this.filtroPopover.toggle(event);

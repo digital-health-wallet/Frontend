@@ -58,4 +58,10 @@ export class AgendamentoService {
   toggleFavorito(id: number): Observable<AgendamentoResponse> {
     return this.http.patch<AgendamentoResponse>(`${this.API}/${id}/favorito`, {});
   }
+  atualizar(id: number, request: AgendamentoRequest): Observable<AgendamentoResponse> {
+    return this.http.put<AgendamentoResponse>(`${this.API}/${id}`, request);
+  }
+  buscarPorId(id: number): Observable<AgendamentoResponse> {
+    return this.http.get<AgendamentoResponse>(`${this.API}/${id}`);
+  }
 }

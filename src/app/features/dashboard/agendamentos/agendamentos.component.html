@@ -21,7 +21,7 @@
     <div class="actions-bar">
       <p-button label="Filtrar" icon="pi pi-filter" (onClick)="toggleFiltro($event)" />
       <p-button label="Arquivar" icon="pi pi-inbox" (onClick)="arquivarSelecionados()" />
-      <p-button label="Novo" icon="pi pi-plus-circle" routerLink="/agendamentos/novo" />
+      <p-button label="Novo" icon="pi pi-plus-circle" (click)="abrirModal()" />
     </div>
   }
 </div>
@@ -123,3 +123,17 @@
     }
   </div>
 }
+
+<p-dialog 
+  [(visible)]="exibirModal" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  styleClass="modal-agendamento"
+  appendTo="body">
+  
+  <app-novo-agendamento 
+     (salvoComSucesso)="fecharModalERecarregar()">
+  </app-novo-agendamento>
+  
+</p-dialog>

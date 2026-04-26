@@ -1,0 +1,164 @@
+
+.form-container { 
+  padding: var(--spacing-xl); 
+  background: var(--bg-card-blue); 
+  border-radius: var(--border-radius-lg);
+
+  max-width: 800px;
+  max-height: 90vh;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: var(--spacing-md);
+  }
+}
+
+.form-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  color: var(--text-primary);
+
+  @media (max-width: 768px) {
+    font-size: var(--font-size-xl); 
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+
+  @media (max-width: 768px) { 
+    grid-template-columns: 1fr; 
+  }
+}
+
+.form-group { 
+  margin-bottom: var(--spacing-md); 
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.input-field, .select-field, .textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: white;
+  font-size: var(--font-size-sm);
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: var(--color-primary);
+  }
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.btn-sync {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-sm) 0;
+  margin-top: var(--spacing-md);
+
+  &:hover { color: var(--color-primary); }
+}
+
+.form-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid rgba(0,0,0,0.05);
+
+  @media (max-width: 768px) {
+    justify-content: stretch;
+  }
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background-color: var(--color-primary); 
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-full);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover { opacity: 0.9; }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 12px; 
+  }
+}
+
+.p-dialog-content {
+  padding: 0 !important; 
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md); 
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.full-width {
+  grid-column: 1 / -1; 
+}
+
+::ng-deep .datepicker-custom {
+  width: 100%;
+}
+
+::ng-deep .modal-agendamento {
+
+  width: 95vw !important; 
+  max-width: 800px !important;
+  max-height: 90vh !important; 
+
+  .p-dialog {
+    background: var(--bg-card-blue) !important; 
+    border-radius: var(--border-radius-lg);
+    border: none;
+    max-height: 100%;
+  }
+
+  .p-dialog-header {
+    background: transparent;
+    color: var(--text-primary);
+    padding: var(--spacing-lg);
+    font-weight: 700;
+  }
+
+  .p-dialog-content {
+    background: transparent;
+    padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+    overflow-y: auto !important;
+  }
+}
