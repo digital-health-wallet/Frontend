@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface AgendamentoResponse {
@@ -63,5 +63,9 @@ export class AgendamentoService {
   }
   buscarPorId(id: number): Observable<AgendamentoResponse> {
     return this.http.get<AgendamentoResponse>(`${this.API}/${id}`);
+  }
+  buscarSugestoesGoogle(idPaciente: number, tokenGoogle: string): Observable<any[]> {
+    const headers = new HttpHeaders().set('Google-Token', tokenGoogle);
+    return this.http.post<any[]>(`${this.API}/sincronizar-google/sugestoes?idPaciente=${idPaciente}`, null, { headers });
   }
 }

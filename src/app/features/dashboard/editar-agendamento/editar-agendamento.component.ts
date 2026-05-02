@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-editar-agendamento',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule],
+  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule, SelectModule],
   providers: [DatePipe],
   templateUrl: './editar-agendamento.component.html',
   styleUrl: './editar-agendamento.component.scss'
@@ -22,15 +23,36 @@ export class EditarAgendamentoComponent implements OnInit {
 
   idAgendamento!: number;
   
-  // Variáveis vazias
   motivo = '';
   profissional = '';
   especialidade = '';
   endereco = '';
+  tipoConsulta = 'CONSULTA';
   dataAgendamento: Date | null = null;
 
+  especialidadesOpcoes = [
+    { label: 'Alergista', value: 'Alergista' },
+    { label: 'Cardiologista', value: 'Cardiologista' },
+    { label: 'Dermatologista', value: 'Dermatologista' },
+    { label: 'Endocrinologista', value: 'Endocrinologista' },
+    { label: 'Gastroenterologista', value: 'Gastroenterologista' },
+    { label: 'Ortopedista', value: 'Ortopedista' },
+    { label: 'Pediatra', value: 'Pediatra' },
+    { label: 'Psiquiatra', value: 'Psiquiatra' },
+    { label: 'Urologista', value: 'Urologista' },
+    { label: 'Ginecologista', value: 'Ginecologista' },
+    { label: 'Cirurgião-Plástico', value: 'Cirurgião-Plástico'}
+  ];
+
+  tiposConsultaOpcoes = [
+    { label: 'Consulta', value: 'CONSULTA' },
+    { label: 'Retorno', value: 'RETORNO' },
+    { label: 'Exame', value: 'EXAME' },
+    { label: 'Emergência', value: 'EMERGENCIA' }
+  ];
+
+
   ngOnInit(): void {
-    // 1. Pega o ID real da URL (ex: /agendamentos/editar/5)
     const idParam = this.route.snapshot.paramMap.get('id');
     
     if (idParam) {
@@ -40,24 +62,25 @@ export class EditarAgendamentoComponent implements OnInit {
   }
 
   carregarDadosDoBanco(): void {
-    // 2. Busca do backend (H2) e preenche a tela
     this.agendamentoService.buscarPorId(this.idAgendamento).subscribe({
       next: (dados) => {
         this.especialidade = dados.especialidade;
         this.endereco = dados.nomeClinica;
         this.motivo = dados.motivoConsulta;
         
-        // Remonta a data do PrimeNG (juntando a data e hora que vieram separadas da API)
+        if (dados.tipoConsulta) {
+          this.tipoConsulta = dados.tipoConsulta;
+        }
+        
         if (dados.dataAgendamento && dados.horaAgendamento) {
            const [ano, mes, dia] = dados.dataAgendamento.split('-').map(Number);
            const [hora, minuto] = dados.horaAgendamento.split(':').map(Number);
-           // Lembrete: Mês no JavaScript começa do 0, então mes - 1
            this.dataAgendamento = new Date(ano, mes - 1, dia, hora, minuto);
         }
       },
       error: (err) => {
         console.error('Agendamento não encontrado no BD', err);
-        this.router.navigate(['/agendamentos']); // Expulsa da tela se deu erro
+        this.router.navigate(['/agendamentos']);
       }
     });
   }
@@ -73,19 +96,16 @@ export class EditarAgendamentoComponent implements OnInit {
       especialidade: this.especialidade,
       nomeClinica: this.endereco,
       motivoConsulta: this.motivo,
-      tipoConsulta: 'PRESENCIAL',
+      
+      tipoConsulta: this.tipoConsulta, 
+      
       dataAgendamento: dataFormatada,
       horaAgendamento: horaFormatada
     };
 
-    // 3. Manda a atualização real pro backend
     this.agendamentoService.atualizar(this.idAgendamento, request).subscribe({
       next: () => this.router.navigate(['/agendamentos']),
       error: (err) => console.error('Erro ao atualizar na API:', err)
     });
-  }
-
-  sincronizarGoogle(): void {
-    console.log('Em breve: Integração OAuth2 Google Calendar');
   }
 }

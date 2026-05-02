@@ -12,7 +12,6 @@
 
       <div class="form-group">
   <label class="label">Especialidade</label>
-  
   <p-select 
     [options]="especialidadesOpcoes" 
     [(ngModel)]="especialidade" 
@@ -21,7 +20,18 @@
     placeholder="Selecione a especialidade" 
     styleClass="w-full input-prime">
   </p-select>
-  
+</div>
+
+<div class="form-group">
+  <label class="label">Tipo de Consulta</label>
+  <p-select 
+    [options]="tiposConsultaOpcoes" 
+    [(ngModel)]="tipoConsulta" 
+    optionLabel="label" 
+    optionValue="value"
+    placeholder="Selecione o tipo" 
+    styleClass="w-full input-prime">
+  </p-select>
 </div>
 
       <div class="form-group">
@@ -49,10 +59,10 @@
         </p-datepicker>
       </div>
 
-      <button class="btn-sync">
-        <i class="pi pi-sync"></i>
-        <strong>Sincronizar com Google Agenda</strong>
-      </button>
+      <button class="btn-sync" (click)="sincronizarGoogle()">
+  <i class="pi pi-sync"></i>
+  <strong>Sincronizar com Google Agenda</strong>
+</button>
     </div>
   </div>
 
@@ -63,3 +73,37 @@
     </button>
   </div>
 </div>
+
+<!-- Dialog de Sincronização Google -->
+<p-dialog 
+  header="Sugestões do Google Agenda" 
+  [(visible)]="exibirModalGoogle" 
+  [modal]="true" 
+  [style]="{ width: '50vw' }" 
+  [draggable]="false" 
+  [resizable]="false">
+  
+  <p *ngIf="carregandoGoogle">Buscando eventos no seu calendário...</p>
+  
+  <div *ngIf="!carregandoGoogle && sugestoesGoogle.length === 0">
+    <p>Nenhum evento encontrado no Google Calendar.</p>
+  </div>
+
+  <div *ngIf="!carregandoGoogle && sugestoesGoogle.length > 0">
+    <div class="card mb-3" *ngFor="let evento of sugestoesGoogle" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong>{{ evento.especialidade }}</strong> <br/> 
+          <small><i class="pi pi-calendar"></i> {{ evento.dataAgendamento | date:'dd/MM/yyyy' }} às {{ evento.horaAgendamento }}</small>
+        </div>
+        <button class="p-button p-button-sm p-button-outlined" (click)="usarSugestaoGoogle(evento)">
+          <i class="pi pi-check"></i> Usar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-times" (click)="exibirModalGoogle = false" label="Cancelar" styleClass="p-button-text" severity="danger"></p-button>
+  </ng-template>
+</p-dialog>

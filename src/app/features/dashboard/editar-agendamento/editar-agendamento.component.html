@@ -9,18 +9,35 @@
 
   <div class="form-grid">
     <div class="form-column">
-      <div class="form-group">
-        <label class="label">Especialidade</label>
-        <select class="select-field" [(ngModel)]="especialidade">
-          <option value="Cardiologista">Cardiologista</option>
-          <option value="Ortopedista">Ortopedista</option>
-          <option value="Dermatologista">Dermatologista</option>
-        </select>
-      </div>
 
-      <div class="form-group">
+       <div class="form-group">
         <label class="label">Profissional</label>
         <input type="text" class="input-field" [(ngModel)]="profissional" />
+      </div>
+      
+      <div class="form-group">
+        <label class="label">Especialidade</label>
+        <p-select 
+          [options]="especialidadesOpcoes" 
+          [(ngModel)]="especialidade" 
+          optionLabel="label" 
+          optionValue="value"
+          placeholder="Selecione a especialidade" 
+          styleClass="w-full input-prime">
+        </p-select>
+      </div>
+
+
+      <div class="form-group">
+        <label class="label">Tipo de Consulta</label>
+        <p-select 
+          [options]="tiposConsultaOpcoes" 
+          [(ngModel)]="tipoConsulta" 
+          optionLabel="label" 
+          optionValue="value"
+          placeholder="Selecione o tipo" 
+          styleClass="w-full input-prime">
+        </p-select>
       </div>
 
       <div class="form-group">
@@ -38,7 +55,7 @@
           [showTime]="true" 
           hourFormat="24"
           dateFormat="dd/mm/yy"
-          styleClass="datepicker-custom">
+          styleClass="datepicker-custom w-full">
         </p-datepicker>
       </div>
 
@@ -51,10 +68,6 @@
         </button>
       </div>
 
-      <button class="btn-sync">
-        <i class="pi pi-sync"></i>
-        <strong>Sincronizar com Google Agenda</strong>
-      </button>
     </div>
 
     <div class="form-group full-width">

@@ -5,11 +5,13 @@ import { RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
 import { SelectModule } from 'primeng/select';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-novo-agendamento',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule, SelectModule],
+  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule, SelectModule, DialogModule, ButtonModule],
   providers: [DatePipe],
   templateUrl: './novo-agendamento.component.html',
   styleUrl: './novo-agendamento.component.scss'
@@ -21,12 +23,24 @@ export class NovoAgendamentoComponent {
   @Output() salvoComSucesso = new EventEmitter<void>();
   @Output() cancelar = new EventEmitter<void>();
 
-  // Variáveis vazias aguardando digitação real
   motivo = '';
   profissional = '';
   especialidade = '';
   endereco = '';
   dataAgendamento: Date | null = null;
+
+  tipoConsulta = 'CONSULTA';
+  tiposConsultaOpcoes = [
+    { label: 'Consulta', value: 'CONSULTA' },
+    { label: 'Retorno', value: 'RETORNO' },
+    { label: 'Exame', value: 'EXAME' },
+    { label: 'Emergência', value: 'EMERGENCIA' }
+  ];
+
+  //Google
+  exibirModalGoogle = false;
+  carregandoGoogle = false;
+  sugestoesGoogle: any[] = [];
 
   especialidadesOpcoes = [
     { label: 'Alergista', value: 'Alergista' },
@@ -52,21 +66,18 @@ export class NovoAgendamentoComponent {
     const horaFormatada = this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!;
 
     const request: AgendamentoRequest = {
-      idPaciente: 1, // Único dado fixo até ter o token de login funcionando
+      idPaciente: 1,
       especialidade: this.especialidade,
       nomeClinica: this.endereco,
       motivoConsulta: this.motivo,
-      tipoConsulta: 'CONSULTA', 
+      tipoConsulta: this.tipoConsulta,
       dataAgendamento: this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!,
       horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!
     };
-
-    // Chamada real pro backend
     this.agendamentoService.criar(request).subscribe({
       next: () => {
-        // Em vez de navegar, nós gritamos no megafone: "Pai, terminei!"
         this.salvoComSucesso.emit();
-        this.limparFormulario(); // Zera para a próxima vez que abrir
+        this.limparFormulario(); 
       },
       error: (err) => console.error('Erro ao salvar:', err)
     });
@@ -78,9 +89,37 @@ export class NovoAgendamentoComponent {
     this.especialidade = '';
     this.endereco = '';
     this.dataAgendamento = null;
+    this.tipoConsulta = 'CONSULTA';
   }
 
   sincronizarGoogle(): void {
-    console.log('Em breve: Integração OAuth2 Google Calendar');
+    this.exibirModalGoogle = true;
+    this.carregandoGoogle = true;
+
+    const idPaciente = 1; 
+    const accessToken = 'TOKEN AQUI'; 
+
+    this.agendamentoService.buscarSugestoesGoogle(idPaciente, accessToken).subscribe({
+      next: (dados) => {
+        this.sugestoesGoogle = dados;
+        this.carregandoGoogle = false;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar no Google', err);
+        this.carregandoGoogle = false;
+      }
+    });
+  }
+
+  usarSugestaoGoogle(evento: any): void {
+    this.profissional = evento.especialidade; 
+    this.endereco = evento.nomeClinica || '';
+    
+    if (evento.dataAgendamento) {
+        const dataString = `${evento.dataAgendamento}T${evento.horaAgendamento || '08:00:00'}`;
+        this.dataAgendamento = new Date(dataString);
+    }
+
+    this.exibirModalGoogle = false;
   }
 }
