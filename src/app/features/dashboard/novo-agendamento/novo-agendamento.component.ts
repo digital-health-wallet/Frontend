@@ -136,7 +136,7 @@ onProfissionalChange(): void {
     this.carregandoGoogle = true;
 
     const idPaciente = 1; 
-    const accessToken = 'ya29.a0AQvPyINhvuRIOF5uybEqW-0quh1yAjttujSPS8Z_FIQ61-INWTyEoMZrx-2-6kflrsLZOBld3HJEPzE8DVFOJBc0CDR0zmaN-jQKgitwj4g0X2hLVuRN5EF8OAlfu2fbTDmBCtLV7ILvK6izBuZhf3t9sMYUezAzV62KmikHjZDPvnDZX6OCjQnnP_LgUXkjXH9qL7gaCgYKAc4SARISFQHGX2MiBoEKNJrJnskXv3rzHGnTeA0206';
+    const accessToken = 'TOKEN AQUI';
     this.agendamentoService.buscarSugestoesGoogle(idPaciente, accessToken).subscribe({
       next: (dados) => {
         this.sugestoesGoogle = dados;
