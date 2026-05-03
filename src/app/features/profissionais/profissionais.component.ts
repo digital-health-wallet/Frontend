@@ -16,11 +16,10 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ProfissionaisComponent implements OnInit {
   private profissionalService = inject(ProfissionalService);
-  private viaCepService = inject(ViaCep); // Injetando seu serviço de CEP
+  private viaCepService = inject(ViaCep); 
 
   profissionais = signal<Profissional[]>([]);
   exibirFormulario = signal(false);
-
 
 
   form = {
@@ -49,7 +48,7 @@ export class ProfissionaisComponent implements OnInit {
     });
   }
 
-  // Método atualizado usando o seu ViaCep Service
+
   buscarCep(): void {
     const cep = this.form.cep?.replace(/\D/g, '');
     

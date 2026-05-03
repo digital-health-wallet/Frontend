@@ -3,7 +3,7 @@
   padding: var(--spacing-xl); 
   background: var(--bg-card-blue); 
   border-radius: var(--border-radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.6); /* Borda de brilho */
+  border: 1px solid rgba(255, 255, 255, 0.6); 
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   max-width: 800px;
@@ -45,28 +45,28 @@
 .label {
   display: block;
   font-weight: 700;
-  font-size: 0.85rem; /* Levemente menor que o input */
-  text-transform: uppercase; /* Opcional: dá um tom mais técnico/médico */
+  font-size: 0.85rem; 
+  text-transform: uppercase; 
   letter-spacing: 0.025em;
   margin-bottom: 8px;
-  color: var(--text-secondary); /* Cor um pouco menos agressiva que o preto puro */
+  color: var(--text-secondary); 
 }
 
 .input-field, .select-field, .textarea {
   width: 100%;
-  padding: 12px 16px; /* Aumentei um pouco o respiro interno */
-  border: 1.5px solid #E2E8F0; /* Borda mais suave */
+  padding: 12px 16px; 
+  border: 1.5px solid #E2E8F0;
   border-radius: var(--border-radius-md);
   background: white;
   font-size: var(--font-size-sm);
   color: var(--text-primary);
   outline: none;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Sombra interna leve */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
   &:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.15); /* Efeito de foco moderno */
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.15);
     background: white;
   }
 
@@ -74,7 +74,7 @@
     color: #A0AEC0;
   }
 }
-/* Força todos os campos e componentes PrimeNG a ocuparem 100% da div pai */
+
 .input-field, 
 .select-field, 
 .textarea,
@@ -82,10 +82,10 @@
 :host ::ng-deep .p-datepicker,
 :host ::ng-deep .p-inputtext {
   width: 100% !important;
-  display: flex !important; /* Ajuda a alinhar ícones internos */
+  display: flex !important; 
 }
 
-/* Garante que o container do componente PrimeNG também se estique */
+
 :host ::ng-deep .p-component {
   width: 100%;
 }
@@ -99,7 +99,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: white; /* Card branco para destacar no fundo azul */
+  background: white; 
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   cursor: pointer;
@@ -108,7 +108,7 @@
   font-weight: 600;
   padding: 8px 12px;
   transition: all 0.2s;
-  width: 100%; /* Se quiser que ele seja um bloco largo como os inputs */
+  width: 100%; 
   justify-content: center;
   margin-top: 10px;
 
@@ -123,7 +123,7 @@
   }
 
   &:hover svg {
-    transform: rotate(180deg); /* O ícone de sincronizar gira no hover */
+    transform: rotate(180deg); 
   }
 }
 
@@ -154,7 +154,7 @@
 
   &:hover { opacity: 0.9; }
   &:active {
-    transform: scale(0.98); /* Efeito de afundar ao clicar */
+    transform: scale(0.98); 
     box-shadow: 0 2px 4px rgba(var(--color-primary-rgb), 0.2);
   }
 

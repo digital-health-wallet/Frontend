@@ -1,7 +1,7 @@
 <div class="page-header">Profissionais</div>
 
 <div class="profissionais-grid">
-  <!-- Card para Adicionar Novo -->
+
   <div class="prof-card add-card" (click)="abrirFormulario()">
     <div class="add-icon">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -13,7 +13,7 @@
     <p>Cadastrar novo contato</p>
   </div>
 
-  <!-- Lista de Profissionais Existentes -->
+ 
   @for (prof of profissionais(); track prof.id) {
     <div class="prof-card">
       <div class="prof-avatar">
@@ -37,10 +37,10 @@
   [modal]="true" 
   [draggable]="false" 
   [resizable]="false"
-  styleClass="modal-agendamento"> <!-- Reaproveitando sua classe de estilo -->
+  styleClass="modal-agendamento"> 
 
   <div class="form-grid-modal">
-    <!-- Dados Básicos -->
+
     <div class="form-group full-width">
       <label class="label">Nome do Profissional</label>
       <input class="input-field" placeholder="Ex: Dr. Silva" [(ngModel)]="form.nomeProfissional" />
@@ -71,10 +71,8 @@
       <input class="input-field" placeholder="Ex: Clínica Bem Estar" [(ngModel)]="form.nomeClinica" />
     </div>
 
-    <!-- Divisor Visual -->
     <div class="form-divider full-width"><span>Endereço</span></div>
 
-    <!-- Grid de Endereço - Todos Habilitados -->
     <div class="form-group">
       <label class="label">CEP</label>
       <input class="input-field" placeholder="00000-000" [(ngModel)]="form.cep" (blur)="buscarCep()" maxlength="9" />

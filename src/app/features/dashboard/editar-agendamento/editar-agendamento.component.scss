@@ -73,10 +73,10 @@
 
 .textarea { min-height: 100px; resize: vertical; }
 
-::ng-deep .datepicker-custom { width: 100%; }
-::ng-deep .datepicker-custom .p-datepicker-input { width: 100%; }
+:host ::ng-deep .datepicker-custom { width: 100%; }
+:host ::ng-deep .datepicker-custom .p-datepicker-input { width: 100%; }
 
-/* Botões Extras da Coluna Direita */
+
 .extra-actions {
   display: flex;
   flex-direction: column;
@@ -97,18 +97,17 @@
   border-radius: var(--border-radius-md);
   font-weight: 600;
   cursor: pointer;
-  /* Ajustei a transição para incluir transform tbm */
   transition: opacity 0.2s, transform 0.1s; 
-  width: 100%; // Mantendo o preenchimento total que você gostou
+  width: 100%; 
 
   &:hover { 
-    opacity: 1.5; /* Mesma lógica do primary */
-    transform: translateY(-1px); /* Leve destaque para cima */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08); /* Sombra sutil para destacar */
+    opacity: 1.5; 
+    transform: translateY(-1px); 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08); 
   }
 
   &:active {
-    transform: scale(0.98); /* Efeito de clique físico */
+    transform: scale(0.98); 
   }
 }
 
@@ -141,7 +140,6 @@
   @media (max-width: 768px) { width: 100%; padding: 12px; }
 }
 
-/* Força todos os campos e componentes PrimeNG a ocuparem 100% da div pai */
 .input-field, 
 .select-field, 
 .textarea,
@@ -149,10 +147,9 @@
 :host ::ng-deep .p-datepicker,
 :host ::ng-deep .p-inputtext {
   width: 100% !important;
-  display: flex !important; /* Ajuda a alinhar ícones internos */
+  display: flex !important; 
 }
 
-/* Garante que o container do componente PrimeNG também se estique */
 :host ::ng-deep .p-component {
   width: 100%;
 }
