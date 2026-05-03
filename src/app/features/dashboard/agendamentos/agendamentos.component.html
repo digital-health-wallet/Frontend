@@ -19,9 +19,9 @@
 
   @if (abaAtiva() === 'ativos') {
     <div class="actions-bar">
-      <p-button label="Filtrar" icon="pi pi-filter" (onClick)="toggleFiltro($event)" />
-      <p-button label="Arquivar" icon="pi pi-inbox" (onClick)="arquivarSelecionados()" />
-      <p-button label="Novo" icon="pi pi-plus-circle" (click)="abrirModal()" />
+      <p-button label="Filtrar" icon="pi pi-filter" size="large" (onClick)="toggleFiltro($event)" />
+      <p-button label="Arquivar" icon="pi pi-inbox" size="large" (onClick)="arquivarSelecionados()" />
+      <p-button label="Novo" icon="pi pi-plus-circle" size="large" (click)="abrirModal()" />
     </div>
   }
 </div>
