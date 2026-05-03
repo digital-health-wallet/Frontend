@@ -5,15 +5,22 @@
 </div>
 
 <div class="card-blue form-container">
-  <h2 class="form-title">{{ especialidade }} - {{ profissional }}</h2>
+  <h2 class="form-title">{{ especialidade }}</h2>
 
   <div class="form-grid">
     <div class="form-column">
 
        <div class="form-group">
-        <label class="label">Profissional</label>
-        <input type="text" class="input-field" [(ngModel)]="profissional" />
-      </div>
+  <label class="label">Profissional</label>
+  <p-select
+    [options]="profissionaisOpcoes"
+    [(ngModel)]="idProfissionalSelecionado"
+    optionLabel="label"
+    optionValue="value"
+    placeholder="Selecione o profissional"
+    styleClass="w-full input-prime">
+  </p-select>
+</div>
       
       <div class="form-group">
         <label class="label">Especialidade</label>

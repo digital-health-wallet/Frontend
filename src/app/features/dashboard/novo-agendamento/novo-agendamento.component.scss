@@ -3,6 +3,8 @@
   padding: var(--spacing-xl); 
   background: var(--bg-card-blue); 
   border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.6); /* Borda de brilho */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   max-width: 800px;
   max-height: 90vh;
@@ -29,7 +31,7 @@
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-xl);
+  gap: 20px;
 
   @media (max-width: 768px) { 
     grid-template-columns: 1fr; 
@@ -42,24 +44,50 @@
 
 .label {
   display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.85rem; /* Levemente menor que o input */
+  text-transform: uppercase; /* Opcional: dá um tom mais técnico/médico */
+  letter-spacing: 0.025em;
+  margin-bottom: 8px;
+  color: var(--text-secondary); /* Cor um pouco menos agressiva que o preto puro */
 }
 
 .input-field, .select-field, .textarea {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
+  padding: 12px 16px; /* Aumentei um pouco o respiro interno */
+  border: 1.5px solid #E2E8F0; /* Borda mais suave */
   border-radius: var(--border-radius-md);
   background: white;
   font-size: var(--font-size-sm);
+  color: var(--text-primary);
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Sombra interna leve */
 
   &:focus {
     border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.15); /* Efeito de foco moderno */
+    background: white;
   }
+
+  &::placeholder {
+    color: #A0AEC0;
+  }
+}
+/* Força todos os campos e componentes PrimeNG a ocuparem 100% da div pai */
+.input-field, 
+.select-field, 
+.textarea,
+:host ::ng-deep .p-select, 
+:host ::ng-deep .p-datepicker,
+:host ::ng-deep .p-inputtext {
+  width: 100% !important;
+  display: flex !important; /* Ajuda a alinhar ícones internos */
+}
+
+/* Garante que o container do componente PrimeNG também se estique */
+:host ::ng-deep .p-component {
+  width: 100%;
 }
 
 .textarea {
@@ -68,18 +96,35 @@
 }
 
 .btn-sync {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  background: none;
-  border: none;
+  gap: 8px;
+  background: white; /* Card branco para destacar no fundo azul */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
   cursor: pointer;
-  color: var(--text-primary);
-  font-size: var(--font-size-sm);
-  padding: var(--spacing-sm) 0;
-  margin-top: var(--spacing-md);
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: 8px 12px;
+  transition: all 0.2s;
+  width: 100%; /* Se quiser que ele seja um bloco largo como os inputs */
+  justify-content: center;
+  margin-top: 10px;
 
-  &:hover { color: var(--color-primary); }
+  &:hover {
+    background: var(--color-primary-light);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+
+  svg {
+    transition: transform 0.4s ease;
+  }
+
+  &:hover svg {
+    transform: rotate(180deg); /* O ícone de sincronizar gira no hover */
+  }
 }
 
 .form-footer {
@@ -105,8 +150,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
+  box-shadow: 0 4px 6px rgba(var(--color-primary-rgb), 0.3);
 
   &:hover { opacity: 0.9; }
+  &:active {
+    transform: scale(0.98); /* Efeito de afundar ao clicar */
+    box-shadow: 0 2px 4px rgba(var(--color-primary-rgb), 0.2);
+  }
 
   @media (max-width: 768px) {
     width: 100%;
@@ -121,7 +171,8 @@
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-md); 
+  gap: 20px; 
+  align-items: start;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -132,11 +183,11 @@
   grid-column: 1 / -1; 
 }
 
-::ng-deep .datepicker-custom {
+:host ::ng-deep .datepicker-custom {
   width: 100%;
 }
 
-::ng-deep .modal-agendamento {
+:host ::ng-deep .modal-agendamento {
 
   width: 95vw !important; 
   max-width: 800px !important;

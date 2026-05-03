@@ -3,10 +3,10 @@ export interface Endereco {
   id?: number;
   cep: string;
   logradouro: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
+  numero?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
   complemento?: string;
 }
 
@@ -22,13 +22,13 @@ export interface Usuario {
 
 export interface Profissional {
   id?: number;
-  endereco?: Endereco;
   nomeProfissional: string;
-  numeroIdentificacaoProfissional: string;
-  contato: string;
-  nomeClinica: string;
-  email: string;
+  numeroIdentificacaoProfissional?: string;
+  contato?: string;
+  nomeClinica?: string;
+  email?: string;
   especialidade: string;
+  endereco?: Endereco;
 }
 
 export interface Paciente {

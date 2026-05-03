@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
+import { ProfissionalService } from '@core/services/profissional.service';
 import { SelectModule } from 'primeng/select';
 
 @Component({
@@ -15,20 +16,20 @@ import { SelectModule } from 'primeng/select';
   styleUrl: './editar-agendamento.component.scss'
 })
 export class EditarAgendamentoComponent implements OnInit {
-  // Injeções
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private agendamentoService = inject(AgendamentoService);
+  private profissionalService = inject(ProfissionalService);
   private datePipe = inject(DatePipe);
 
   idAgendamento!: number;
-  
   motivo = '';
-  profissional = '';
   especialidade = '';
   endereco = '';
   tipoConsulta = 'CONSULTA';
   dataAgendamento: Date | null = null;
+  idProfissionalSelecionado: number | null = null;
+  profissionaisOpcoes: { label: string; value: number }[] = [];
 
   especialidadesOpcoes = [
     { label: 'Alergista', value: 'Alergista' },
@@ -41,7 +42,7 @@ export class EditarAgendamentoComponent implements OnInit {
     { label: 'Psiquiatra', value: 'Psiquiatra' },
     { label: 'Urologista', value: 'Urologista' },
     { label: 'Ginecologista', value: 'Ginecologista' },
-    { label: 'Cirurgião-Plástico', value: 'Cirurgião-Plástico'}
+    { label: 'Cirurgião-Plástico', value: 'Cirurgião-Plástico' }
   ];
 
   tiposConsultaOpcoes = [
@@ -51,15 +52,24 @@ export class EditarAgendamentoComponent implements OnInit {
     { label: 'Emergência', value: 'EMERGENCIA' }
   ];
 
-
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    
-    if (idParam) {
-      this.idAgendamento = Number(idParam);
-      this.carregarDadosDoBanco();
-    }
+  const idParam = this.route.snapshot.paramMap.get('id');
+  if (idParam) {
+    this.idAgendamento = Number(idParam);
+    this.carregarProfissionais(() => this.carregarDadosDoBanco());
   }
+}
+  
+carregarProfissionais(callback?: () => void): void {
+  this.profissionalService.listarTodos().subscribe({
+    next: (dados) => {
+      this.profissionaisOpcoes = dados
+        .filter(p => p.id !== undefined)
+        .map(p => ({ label: p.nomeProfissional ?? '', value: p.id as number }));
+      if (callback) callback();
+    }
+  });
+}
 
   carregarDadosDoBanco(): void {
     this.agendamentoService.buscarPorId(this.idAgendamento).subscribe({
@@ -67,19 +77,16 @@ export class EditarAgendamentoComponent implements OnInit {
         this.especialidade = dados.especialidade;
         this.endereco = dados.nomeClinica;
         this.motivo = dados.motivoConsulta;
-        
-        if (dados.tipoConsulta) {
-          this.tipoConsulta = dados.tipoConsulta;
-        }
-        
+        if (dados.tipoConsulta) this.tipoConsulta = dados.tipoConsulta;
+        if (dados.idProfissional) this.idProfissionalSelecionado = dados.idProfissional;
         if (dados.dataAgendamento && dados.horaAgendamento) {
-           const [ano, mes, dia] = dados.dataAgendamento.split('-').map(Number);
-           const [hora, minuto] = dados.horaAgendamento.split(':').map(Number);
-           this.dataAgendamento = new Date(ano, mes - 1, dia, hora, minuto);
+          const [ano, mes, dia] = dados.dataAgendamento.split('-').map(Number);
+          const [hora, minuto] = dados.horaAgendamento.split(':').map(Number);
+          this.dataAgendamento = new Date(ano, mes - 1, dia, hora, minuto);
         }
       },
       error: (err) => {
-        console.error('Agendamento não encontrado no BD', err);
+        console.error('Agendamento não encontrado', err);
         this.router.navigate(['/agendamentos']);
       }
     });
@@ -87,25 +94,19 @@ export class EditarAgendamentoComponent implements OnInit {
 
   salvar(): void {
     if (!this.dataAgendamento) return;
-
-    const dataFormatada = this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!;
-    const horaFormatada = this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!;
-
     const request: AgendamentoRequest = {
-      idPaciente: 1, 
+      idPaciente: 1,
+      idProfissional: this.idProfissionalSelecionado ?? undefined,
       especialidade: this.especialidade,
       nomeClinica: this.endereco,
       motivoConsulta: this.motivo,
-      
-      tipoConsulta: this.tipoConsulta, 
-      
-      dataAgendamento: dataFormatada,
-      horaAgendamento: horaFormatada
+      tipoConsulta: this.tipoConsulta,
+      dataAgendamento: this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!,
+      horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!
     };
-
     this.agendamentoService.atualizar(this.idAgendamento, request).subscribe({
       next: () => this.router.navigate(['/agendamentos']),
-      error: (err) => console.error('Erro ao atualizar na API:', err)
+      error: (err) => console.error('Erro ao atualizar:', err)
     });
   }
 }

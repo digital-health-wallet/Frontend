@@ -1,1 +1,134 @@
-<p>profissionais works!</p>
+<div class="page-header">Profissionais</div>
+
+<div class="profissionais-grid">
+  <!-- Card para Adicionar Novo -->
+  <div class="prof-card add-card" (click)="abrirFormulario()">
+    <div class="add-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </div>
+    <h3>Novo Profissional</h3>
+    <p>Cadastrar novo contato</p>
+  </div>
+
+  <!-- Lista de Profissionais Existentes -->
+  @for (prof of profissionais(); track prof.id) {
+    <div class="prof-card">
+      <div class="prof-avatar">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <h3>{{ prof.nomeProfissional }}</h3>
+      <p class="especialidade">{{ prof.especialidade }}</p>
+      <p class="clinica">{{ prof.nomeClinica }}</p>
+      <p class="contato">{{ prof.contato }}</p>
+    </div>
+  } @empty {
+    <p class="empty-message">Nenhum profissional cadastrado além deste.</p>
+  }
+</div>
+
+<p-dialog 
+  [(visible)]="exibirFormulario" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  styleClass="modal-agendamento"> <!-- Reaproveitando sua classe de estilo -->
+
+  <div class="form-grid-modal">
+    <!-- Dados Básicos -->
+    <div class="form-group full-width">
+      <label class="label">Nome do Profissional</label>
+      <input class="input-field" placeholder="Ex: Dr. Silva" [(ngModel)]="form.nomeProfissional" />
+    </div>
+
+    <div class="form-group">
+      <label class="label">Especialidade</label>
+      <input class="input-field" placeholder="Ex: Cardiologista" [(ngModel)]="form.especialidade" />
+    </div>
+
+    <div class="form-group">
+      <label class="label">CRM / Identificação</label>
+      <input class="input-field" placeholder="000000/UF" [(ngModel)]="form.numeroIdentificacaoProfissional" />
+    </div>
+
+    <div class="form-group">
+      <label class="label">Contato (WhatsApp)</label>
+      <input class="input-field" placeholder="(00) 00000-0000" [(ngModel)]="form.contato" />
+    </div>
+
+    <div class="form-group">
+      <label class="label">E-mail</label>
+      <input class="input-field" placeholder="medico@email.com" [(ngModel)]="form.email" />
+    </div>
+
+    <div class="form-group full-width">
+      <label class="label">Clínica / Local de Atendimento</label>
+      <input class="input-field" placeholder="Ex: Clínica Bem Estar" [(ngModel)]="form.nomeClinica" />
+    </div>
+
+    <!-- Divisor Visual -->
+    <div class="form-divider full-width"><span>Endereço</span></div>
+
+    <!-- Grid de Endereço - Todos Habilitados -->
+    <div class="form-group">
+      <label class="label">CEP</label>
+      <input class="input-field" placeholder="00000-000" [(ngModel)]="form.cep" (blur)="buscarCep()" maxlength="9" />
+    </div>
+
+    <div class="form-group">
+      <label class="label">Cidade</label>
+      <input class="input-field" placeholder="Cidade" [(ngModel)]="form.cidade" />
+    </div>
+
+    <div class="form-group full-width">
+      <label class="label">Logradouro</label>
+      <input class="input-field" placeholder="Rua, Avenida..." [(ngModel)]="form.logradouro" />
+    </div>
+
+    <div class="form-group">
+      <label class="label">Bairro</label>
+      <input class="input-field" placeholder="Bairro" [(ngModel)]="form.bairro" />
+    </div>
+
+    <div class="form-group">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+          <label class="label">Nº</label>
+          <input class="input-field" placeholder="123" [(ngModel)]="form.numero" />
+        </div>
+        <div>
+          <label class="label">UF</label>
+          <input class="input-field" placeholder="SP" [(ngModel)]="form.estado" maxlength="2" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="form-actions">
+      <p-button 
+      class="btn-outline"
+      size="large"
+  label="Cancelar" 
+  severity="danger" 
+  [raised]="true" 
+  (onClick)="fecharFormulario()" 
+  styleClass="btn-outline-ajustado">
+</p-button>
+      <p-button 
+      class="btn-outline"
+      size="large"
+  label="Salvar" 
+  severity="info" 
+  [raised]="true" 
+  (onClick)="salvarProfissional()" 
+  styleClass="btn-outline-ajustado">
+</p-button>
+    </div>
+  </ng-template>
+</p-dialog>

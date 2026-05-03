@@ -1,9 +1,10 @@
-import { Component, inject, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
+import { ProfissionalService } from '@core/services/profissional.service';
 import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -11,13 +12,14 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-novo-agendamento',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule, SelectModule, DialogModule, ButtonModule],
+  imports: [CommonModule, FormsModule, DatePickerModule, SelectModule, DialogModule, ButtonModule],
   providers: [DatePipe],
   templateUrl: './novo-agendamento.component.html',
   styleUrl: './novo-agendamento.component.scss'
 })
 export class NovoAgendamentoComponent {
   private agendamentoService = inject(AgendamentoService);
+  private profissionalService = inject(ProfissionalService);
   private datePipe = inject(DatePipe);
 
   @Output() salvoComSucesso = new EventEmitter<void>();
@@ -25,9 +27,16 @@ export class NovoAgendamentoComponent {
 
   motivo = '';
   profissional = '';
+  novoProfissional = {
+  nomeProfissional: ''
+};
   especialidade = '';
   endereco = '';
   dataAgendamento: Date | null = null;
+
+  idProfissionalSelecionado: number | null = null;
+  profissionaisOpcoes: { label: string; value: number }[] = [];
+  profissionaisList: any[] = [];
 
   tipoConsulta = 'CONSULTA';
   tiposConsultaOpcoes = [
@@ -55,6 +64,31 @@ export class NovoAgendamentoComponent {
     { label: 'Ginecologista', value: 'Ginecologista' },
     {label: 'Cirurgião-Plástico', value: 'Cirurgião-Plástico'},
   ];
+  
+  ngOnInit(): void {
+    this.carregarProfissionais();
+  }
+
+  carregarProfissionais(): void {
+  this.profissionalService.listarTodos().subscribe({
+    next: (dados) => {
+      this.profissionaisList = dados;
+      this.profissionaisOpcoes = [
+        { label: '+ Novo Profissional', value: -1 },
+        ...dados
+          .filter(p => p.id !== undefined)
+          .map(p => ({ label: p.nomeProfissional ?? '', value: p.id as number }))
+      ];
+    }
+  });
+}
+
+onProfissionalChange(): void {
+  const prof = this.profissionaisList.find(p => p.id === this.idProfissionalSelecionado);
+  if (prof?.especialidade) {
+    this.especialidade = prof.especialidade;
+  }
+}
 
   salvar(): void {
     if (!this.dataAgendamento) {
@@ -62,11 +96,14 @@ export class NovoAgendamentoComponent {
       return;
     }
 
-    const dataFormatada = this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!;
-    const horaFormatada = this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!;
-
     const request: AgendamentoRequest = {
       idPaciente: 1,
+      idProfissional: this.idProfissionalSelecionado !== -1 ? this.idProfissionalSelecionado ?? undefined : undefined,
+      profissional: this.idProfissionalSelecionado === -1 ? {
+  nomeProfissional: this.novoProfissional.nomeProfissional,
+  especialidade: this.especialidade,
+  nomeClinica: this.endereco
+} : null,
       especialidade: this.especialidade,
       nomeClinica: this.endereco,
       motivoConsulta: this.motivo,
@@ -74,10 +111,11 @@ export class NovoAgendamentoComponent {
       dataAgendamento: this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!,
       horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!
     };
+
     this.agendamentoService.criar(request).subscribe({
       next: () => {
         this.salvoComSucesso.emit();
-        this.limparFormulario(); 
+        this.limparFormulario();
       },
       error: (err) => console.error('Erro ao salvar:', err)
     });
@@ -85,11 +123,12 @@ export class NovoAgendamentoComponent {
 
   limparFormulario() {
     this.motivo = '';
-    this.profissional = '';
     this.especialidade = '';
     this.endereco = '';
     this.dataAgendamento = null;
     this.tipoConsulta = 'CONSULTA';
+    this.idProfissionalSelecionado = null;
+    this.novoProfissional = { nomeProfissional: '' };
   }
 
   sincronizarGoogle(): void {
@@ -97,8 +136,7 @@ export class NovoAgendamentoComponent {
     this.carregandoGoogle = true;
 
     const idPaciente = 1; 
-    const accessToken = 'TOKEN AQUI'; 
-
+    const accessToken = 'ya29.a0AQvPyINhvuRIOF5uybEqW-0quh1yAjttujSPS8Z_FIQ61-INWTyEoMZrx-2-6kflrsLZOBld3HJEPzE8DVFOJBc0CDR0zmaN-jQKgitwj4g0X2hLVuRN5EF8OAlfu2fbTDmBCtLV7ILvK6izBuZhf3t9sMYUezAzV62KmikHjZDPvnDZX6OCjQnnP_LgUXkjXH9qL7gaCgYKAc4SARISFQHGX2MiBoEKNJrJnskXv3rzHGnTeA0206';
     this.agendamentoService.buscarSugestoesGoogle(idPaciente, accessToken).subscribe({
       next: (dados) => {
         this.sugestoesGoogle = dados;

@@ -54,6 +54,7 @@
   font-weight: 600;
   margin-bottom: 6px;
   color: var(--text-primary);
+  
 }
 
 /* Inputs e Botões */
@@ -79,9 +80,9 @@
 .extra-actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   margin-top: 8px;
-  margin-bottom: var(--spacing-md);
+  width: 100%;
 }
 
 .btn-outline {
@@ -96,23 +97,19 @@
   border-radius: var(--border-radius-md);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  /* Ajustei a transição para incluir transform tbm */
+  transition: opacity 0.2s, transform 0.1s; 
+  width: 100%; // Mantendo o preenchimento total que você gostou
 
-  &:hover { background: rgba(66, 133, 244, 0.05); color: var(--color-primary); }
-}
+  &:hover { 
+    opacity: 1.5; /* Mesma lógica do primary */
+    transform: translateY(-1px); /* Leve destaque para cima */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08); /* Sombra sutil para destacar */
+  }
 
-.btn-sync {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-primary);
-  font-size: var(--font-size-sm);
-  padding: var(--spacing-sm) 0;
-
-  &:hover { color: var(--color-primary); }
+  &:active {
+    transform: scale(0.98); /* Efeito de clique físico */
+  }
 }
 
 .form-footer {
@@ -138,7 +135,24 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
+  
 
   &:hover { opacity: 0.9; }
   @media (max-width: 768px) { width: 100%; padding: 12px; }
+}
+
+/* Força todos os campos e componentes PrimeNG a ocuparem 100% da div pai */
+.input-field, 
+.select-field, 
+.textarea,
+:host ::ng-deep .p-select, 
+:host ::ng-deep .p-datepicker,
+:host ::ng-deep .p-inputtext {
+  width: 100% !important;
+  display: flex !important; /* Ajuda a alinhar ícones internos */
+}
+
+/* Garante que o container do componente PrimeNG também se estique */
+:host ::ng-deep .p-component {
+  width: 100%;
 }

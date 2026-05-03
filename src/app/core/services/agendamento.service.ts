@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export interface AgendamentoResponse {
   id: number;
   idPaciente: number;
+  idProfissional?: number;
   especialidade: string;
   nomeClinica: string;
   motivoConsulta: string;
@@ -17,10 +18,21 @@ export interface AgendamentoResponse {
   arquivado: boolean;
 }
 
+export interface ProfissionalRequest {
+  nomeProfissional?: string;
+  especialidade?: string;
+  contato?: string;
+  nomeClinica?: string;
+  email?: string;
+  numeroIdentificacaoProfissional?: string;
+}
+
 export interface AgendamentoRequest {
   idPaciente: number;
+  idProfissional?: number;
+  profissional?: ProfissionalRequest | null;
   especialidade: string;
-  nomeClinica: string;
+  nomeClinica?: string;
   motivoConsulta?: string;
   tipoConsulta?: string;
   dataAgendamento: string;
