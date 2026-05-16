@@ -21,8 +21,8 @@ export class ProfissionaisComponent implements OnInit {
   profissionais = signal<Profissional[]>([]);
   exibirFormulario = signal(false);
 
-
-  form = {
+  form: any = {
+    id: null,
     nomeProfissional: '',
     especialidade: '',
     nomeClinica: '',
@@ -48,7 +48,6 @@ export class ProfissionaisComponent implements OnInit {
     });
   }
 
-
   buscarCep(): void {
     const cep = this.form.cep?.replace(/\D/g, '');
     
@@ -67,8 +66,28 @@ export class ProfissionaisComponent implements OnInit {
     }
   }
 
-  abrirFormulario(): void {
-    this.resetarFormulario();
+  abrirFormulario(profissional?: any): void { 
+    if (profissional) {
+      this.form = {
+        id: profissional.id,
+        nomeProfissional: profissional.nomeProfissional || '',
+        especialidade: profissional.especialidade || '',
+        nomeClinica: profissional.nomeClinica || '',
+        contato: profissional.contato || '',
+        email: profissional.email || '',
+        numeroIdentificacaoProfissional: profissional.numeroIdentificacaoProfissional || '',
+
+        cep: profissional.endereco?.cep || '',
+        logradouro: profissional.endereco?.logradouro || '',
+        numero: profissional.endereco?.numero || '',
+        bairro: profissional.endereco?.bairro || '',
+        cidade: profissional.endereco?.cidade || '',
+        estado: profissional.endereco?.estado || ''
+      };
+    } else {
+      this.resetarFormulario();
+    }
+    
     this.exibirFormulario.set(true);
   }
 
@@ -77,18 +96,40 @@ export class ProfissionaisComponent implements OnInit {
   }
 
   salvarProfissional(): void {
-    this.profissionalService.salvar(this.form).subscribe({
+    const payload = {
+      id: this.form.id, 
+      nomeProfissional: this.form.nomeProfissional,
+      especialidade: this.form.especialidade,
+      nomeClinica: this.form.nomeClinica,
+      contato: this.form.contato,
+      email: this.form.email,
+      numeroIdentificacaoProfissional: this.form.numeroIdentificacaoProfissional,
+      
+      endereco: {
+        cep: this.form.cep,
+        logradouro: this.form.logradouro,
+        numero: this.form.numero,
+        bairro: this.form.bairro,
+        cidade: this.form.cidade,
+        estado: this.form.estado
+      }
+    };
+
+    this.profissionalService.salvar(payload).subscribe({
       next: () => {
-        this.carregarProfissionais();
-        this.fecharFormulario();
+        this.carregarProfissionais(); 
+        this.fecharFormulario(); 
       },
-      error: (erro) => alert('Erro ao salvar profissional.')
+      error: (erro) => {
+        console.error('Erro ao salvar:', erro);
+        alert('Erro ao salvar profissional. Verifique o console do backend.');
+      }
     });
   }
 
   private resetarFormulario(): void {
     this.form = {
-      nomeProfissional: '',
+      id: null, 
       especialidade: '',
       nomeClinica: '',
       contato: '',

@@ -13,6 +13,10 @@ export class ProfissionalService {
   }
 
   salvar(profissional: Profissional): Observable<Profissional> {
-    return this.http.post<Profissional>(this.apiUrl, profissional);
+    if (profissional.id) {
+      return this.http.put<any>(`${this.apiUrl}/${profissional.id}`, profissional);
+    } else {
+      return this.http.post<any>(this.apiUrl, profissional);
+    }
   }
 }
