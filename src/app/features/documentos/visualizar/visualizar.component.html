@@ -1,0 +1,39 @@
+<div class="page-header">Exames</div>
+
+<div class="tabs">
+  <button [class.active]="tabAtiva() === 'exames'" (click)="tabAtiva.set('exames')">Exames</button>
+  <button [class.active]="tabAtiva() === 'receitas'" (click)="tabAtiva.set('receitas')">Receitas</button>
+  <button [class.active]="tabAtiva() === 'diagnosticos'" (click)="tabAtiva.set('diagnosticos')">Diagnósticos</button>
+</div>
+
+@if (tabAtiva() === 'exames') {
+  <div class="lista">
+    <h3>Exames</h3>
+    @for (item of exames; track item.nome) {
+      <div class="lista-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <div>
+          <strong>{{ item.nome }}</strong>
+          <span class="item-data">{{ item.data }}</span>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (tabAtiva() === 'receitas') {
+  <div class="lista">
+    <h3>Receitas</h3>
+    <p class="empty">Nenhuma receita cadastrada.</p>
+  </div>
+}
+
+@if (tabAtiva() === 'diagnosticos') {
+  <div class="lista">
+    <h3>Diagnósticos</h3>
+    <p class="empty">Nenhum diagnóstico cadastrado.</p>
+  </div>
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
@@ -6,11 +6,15 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
 import { ProfissionalService } from '@core/services/profissional.service';
 import { SelectModule } from 'primeng/select';
+import { DialogModule } from 'primeng/dialog';
+import { ReceitaFormComponent } from '../../documentos/receita-form/receita-form.component';
+import { ExameFormComponent } from '../../documentos/exame-form/exame-form.component';
+import { DiagnosticoFormComponent } from '../../documentos/diagnostico-form/diagnostico-form.component';
 
 @Component({
   selector: 'app-editar-agendamento',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule, SelectModule],
+  imports: [CommonModule, FormsModule, RouterLink, DatePickerModule, SelectModule, DialogModule, ReceitaFormComponent, ExameFormComponent, DiagnosticoFormComponent],
   providers: [DatePipe],
   templateUrl: './editar-agendamento.component.html',
   styleUrl: './editar-agendamento.component.scss'
@@ -51,6 +55,10 @@ export class EditarAgendamentoComponent implements OnInit {
     { label: 'Exame', value: 'EXAME' },
     { label: 'Emergência', value: 'EMERGENCIA' }
   ];
+
+  exibirModalReceita = signal(false);
+  exibirModalExame = signal(false);
+  exibirModalDiagnostico = signal(false);
 
   ngOnInit(): void {
   const idParam = this.route.snapshot.paramMap.get('id');

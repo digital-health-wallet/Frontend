@@ -1,0 +1,64 @@
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+
+  @media (max-width: 900px) { 
+    grid-template-columns: repeat(2, 1fr); 
+  }
+  
+  @media (max-width: 500px) { 
+    grid-template-columns: 1fr; 
+  }
+}
+
+ .page-header {
+    text-align: left !important;
+    padding-left: 1rem;
+    background: #CDDEF6;
+    font-size: var(--font-size-3xl);
+  }
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  background: var(--color-primary-light);
+  border-radius: var(--border-radius-lg);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  min-height: 180px;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    background: var(--color-primary-lighter);
+  }
+}
+
+:host ::ng-deep {
+  @media (max-width: 768px) {
+    .p-dialog {
+      width: 95vw !important; 
+      max-height: 90vh !important; 
+    }
+    
+    .p-dialog-content {
+      padding: var(--spacing-md) !important;
+    }
+    .upload-area {
+      flex-direction: column;
+      text-align: center;
+      
+      button { width: 100%; }
+    }
+  }
+}

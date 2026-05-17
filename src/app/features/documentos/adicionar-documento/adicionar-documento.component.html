@@ -1,0 +1,41 @@
+@if (isContextoAgendamento) {
+  <div class="breadcrumb">
+    <span>Voltar / </span><span>Agendamento / </span><span>Editar - Agendamento / Adicionar - Documento</span>
+  </div>
+}
+
+<div class="page-header">{{ tituloDaPagina }}</div>
+
+<div class="cards-grid">
+  <a class="action-card" (click)="abrirModalReceita()">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+    </svg>
+    <span>Cadastrar receitas</span>
+  </a>
+
+  <a class="action-card" (click)="abrirModalExame()">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M10 2L8 8H2l5 4-2 6 5-3 5 3-2-6 5-4h-6z"/>
+    </svg>
+    <span>Cadastrar exames</span>
+  </a>
+
+  <a class="action-card">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      <path d="M11 8v6M8 11h6"/>
+    </svg>
+    <span>Diagnóstico</span>
+  </a>
+
+  <a routerLink="visualizar" class="action-card">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+    <span>Visualizar</span>
+  </a>
+</div>

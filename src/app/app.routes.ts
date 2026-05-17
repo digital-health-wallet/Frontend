@@ -34,7 +34,20 @@ export const routes: Routes = [
       },
       {
         path: 'documentos',
-        loadComponent: () => import('./features/documentos/documentos.component').then(m => m.DocumentosComponent),
+        loadComponent: () => import('./features/documentos/adicionar-documento/adicionar-documento.component').then(m => m.AdicionarDocumentoComponent),
+      },
+      {
+        path: 'documentos/visualizar',
+        loadComponent: () => import('./features/documentos/visualizar/visualizar.component').then(m => m.VisualizarComponent),
+      },
+
+      {
+        path: 'agendamentos/:id/documentos',
+        loadComponent: () => import('./features/documentos/adicionar-documento/adicionar-documento.component').then(m => m.AdicionarDocumentoComponent),
+      },
+      {
+        path: 'agendamentos/:id/documentos/visualizar',
+        loadComponent: () => import('./features/documentos/visualizar/visualizar.component').then(m => m.VisualizarComponent),
       },
       {
         path: 'prontuario',

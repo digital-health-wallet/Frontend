@@ -29,7 +29,6 @@
   color: var(--text-primary);
 }
 
-/* Grid Responsivo */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -152,4 +151,19 @@
 
 :host ::ng-deep .p-component {
   width: 100%;
+}
+
+:host ::ng-deep .modal-documento {
+  
+  .p-dialog-header {
+    background: transparent !important;
+    border-bottom: none !important;
+    padding: 16px 16px 0 0 !important; 
+  }
+
+  .p-dialog-content {
+    padding: 0 !important;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
 }

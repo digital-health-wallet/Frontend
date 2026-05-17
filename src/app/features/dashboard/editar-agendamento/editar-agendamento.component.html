@@ -67,12 +67,16 @@
       </div>
 
       <div class="extra-actions">
-        <button class="btn-outline" routerLink="../documentos">
+        <button class="btn-outline" (click)="exibirModalExame.set(true)">
           <i class="pi pi-file-plus"></i> Adicionar Documentos
         </button>
-        <button class="btn-outline">
+        <button class="btn-outline"(click)="exibirModalDiagnostico.set(true)">
           <i class="pi pi-heart-fill"></i> Adicionar Diagnóstico
         </button>
+        <button class="btn-outline"(click)="exibirModalReceita.set(true)">
+          <i class="pi pi-file-edit"></i> Adicionar Receita
+        </button>
+        
       </div>
 
     </div>
@@ -90,3 +94,34 @@
     </button>
   </div>
 </div>
+
+
+<p-dialog 
+  [(visible)]="exibirModalReceita" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  [style]="{ width: '100%', maxWidth: '500px' }" 
+  styleClass="modal-documento">
+  <app-receita-form></app-receita-form>
+</p-dialog>
+
+<p-dialog 
+  [(visible)]="exibirModalExame" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  [style]="{ width: '100%', maxWidth: '500px' }" 
+  styleClass="modal-documento">
+  <app-exame-form></app-exame-form>
+</p-dialog>
+
+<p-dialog 
+  [(visible)]="exibirModalDiagnostico" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  [style]="{ width: '100%', maxWidth: '500px' }" 
+  styleClass="modal-documento">
+  <app-diagnostico-form></app-diagnostico-form>
+</p-dialog>
