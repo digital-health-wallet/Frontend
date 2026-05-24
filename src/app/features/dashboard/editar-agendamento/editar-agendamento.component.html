@@ -103,7 +103,11 @@
   [resizable]="false"
   [style]="{ width: '100%', maxWidth: '500px' }" 
   styleClass="modal-documento">
-  <app-receita-form></app-receita-form>
+  
+  <app-receita-form 
+    [idAgendamento]="idAgendamento" 
+    (aoSalvar)="exibirModalReceita.set(false)">
+  </app-receita-form>
 </p-dialog>
 
 <p-dialog 
@@ -113,7 +117,11 @@
   [resizable]="false"
   [style]="{ width: '100%', maxWidth: '500px' }" 
   styleClass="modal-documento">
-  <app-exame-form></app-exame-form>
+  
+  <app-exame-form 
+    [idAgendamento]="idAgendamento" 
+    (aoSalvar)="exibirModalExame.set(false)">
+  </app-exame-form>
 </p-dialog>
 
 <p-dialog 
@@ -123,5 +131,9 @@
   [resizable]="false"
   [style]="{ width: '100%', maxWidth: '500px' }" 
   styleClass="modal-documento">
-  <app-diagnostico-form></app-diagnostico-form>
+  
+  <app-diagnostico-form 
+    [idAgendamento]="idAgendamento" 
+    (aoSalvar)="exibirModalDiagnostico.set(false)">
+  </app-diagnostico-form>
 </p-dialog>

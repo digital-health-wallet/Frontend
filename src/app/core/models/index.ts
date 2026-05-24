@@ -60,38 +60,41 @@ export interface Agendamento {
 
 export interface Diagnostico {
   id?: number;
-  agendamento: Agendamento;
+  idAgendamento: number;
   nome: string;
-  cid: string;
-  descricao: string;
+  cid?: string;
+  descricao?: string;
   doencaCronica: boolean;
 }
 
 export interface Exame {
   id?: number;
-  agendamento?: Agendamento;
+  idAgendamento?: number | null; 
   nomeExame: string;
-  dataHoraExame: string;
+  dataHoraExame?: string;
   observacoes?: string;
+  uploads?: Upload[];
 }
 
 export interface Medicamento {
   id?: number;
   nomeMedicamento: string;
-  laboratorio: string;
+  laboratorio?: string;
   feedback?: string;
 }
 
 export interface Receita {
   id?: number;
-  agendamento?: Agendamento;
-  dataEmissao: string;
+  idAgendamento?: number | null;
+  dataEmissao?: string;
   orientacoesGerais?: string;
+  itens: ItemReceita[];
+  uploads?: Upload[];
 }
 
 export interface ItemReceita {
   id?: number;
-  receita?: Receita;
+  idReceita?: number;
   medicamento: Medicamento;
   posologia: string;
   usoContinuo: boolean;
@@ -109,8 +112,6 @@ export interface Alergia {
 
 export interface Upload {
   id?: number;
-  exame?: Exame;
-  receita?: Receita;
   base64: string;
 }
 
@@ -130,3 +131,4 @@ export interface AgendamentoResumo {
   favorito: boolean;
   selecionado?: boolean;
 }
+

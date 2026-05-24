@@ -25,9 +25,12 @@
   </div>
 
   <div class="form-footer">
-    <button class="btn-primary" (click)="salvar()">
-      <i class="pi pi-bookmark"></i>
-      Salvar
-    </button>
-  </div>
+  <p-button 
+    [label]="carregando ? 'Salvando...' : 'Salvar'" 
+    [icon]="carregando ? 'pi pi-spinner pi-spin' : 'pi pi-bookmark'" 
+    styleClass="btn-primary" 
+    [disabled]="carregando"
+    (onClick)="salvar()">
+  </p-button>
+</div>
 </div>
