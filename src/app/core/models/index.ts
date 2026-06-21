@@ -115,7 +115,6 @@ export interface Upload {
   base64: string;
 }
 
-// ---- DTOs auxiliares ----
 export interface LoginRequest {
   email: string;
   senha: string;
@@ -132,3 +131,14 @@ export interface AgendamentoResumo {
   selecionado?: boolean;
 }
 
+export interface CadastroProntuarioRequest {
+  idUsuario: number;
+  cpf: string;
+  nome: string;
+  dataNascimento: string;
+  tipoSanguineo: string;
+  fichaEmergencialAtiva: boolean;
+  possuiAlergia: boolean;
+  tipoAlergia?: TipoAlergia;
+  descricaoAlergia?: string;
+}

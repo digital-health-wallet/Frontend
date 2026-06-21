@@ -1,1 +1,88 @@
-<p>prontuario works!</p>
+<div class="prontuario-wrapper">
+  <nav class="breadcrumb">
+    Voltar / Agendamento / <span>Meu - Prontuário</span>
+  </nav>
+
+  <div class="content-split">
+    
+    <form [formGroup]="prontuarioForm" (ngSubmit)="salvar()" class="form-section">
+      <h2 class="form-title-custom">Meu Prontuário</h2>
+
+      <div class="form-group">
+        <label class="label">Nome</label>
+        <input type="text" class="input-field" formControlName="nome" placeholder="Digite o nome completo" />
+      </div>
+
+      <div class="form-group">
+        <label class="label">Data Nascimento</label>
+        <input type="date" class="input-field" formControlName="dataNascimento" />
+      </div>
+
+      <div class="form-group">
+        <label class="label">Possui alguma alergia?</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" [value]="true" formControlName="possuiAlergia" /> Sim
+          </label>
+          <label class="radio-label">
+            <input type="radio" [value]="false" formControlName="possuiAlergia" /> Não
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="prontuarioForm.get('possuiAlergia')?.value" class="animated-fade">
+        <div class="form-group">
+          <label class="label">Tipo de Alergia</label>
+          <select class="select-field" formControlName="tipoAlergia">
+            <option value="" disabled selected>Selecione o tipo</option>
+            <option value="M">Medicamentosa</option>
+            <option value="A">Alimentar</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Descrição</label>
+          <input type="text" class="input-field" formControlName="descricaoAlergia" placeholder="Ex: Alérgica a ovo, dipirona" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label">Tipo Sanguíneo</label>
+        <select class="select-field" formControlName="tipoSanguineo">
+          <option value="" disabled selected>Selecione o tipo sanguíneo</option>
+          <option *ngFor="let tipo of tiposSanguineos" [value]="tipo">{{ tipo }}</option>
+        </select>
+      </div>
+
+      <div class="toggle-container" (click)="toggleFichaEmergencia()">
+        <span class="label mb-0">Habilitar Ficha de Emergência</span>
+        <div class="custom-checkmark" [class.active]="prontuarioForm.get('fichaEmergencialAtiva')?.value">
+          <i class="pi pi-check" *ngIf="prontuarioForm.get('fichaEmergencialAtiva')?.value"></i>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button type="submit" class="btn-primary btn-salvar">
+          <i class="pi pi-save"></i> Salvar
+        </button>
+      </div>
+    </form>
+
+    <div class="qr-section">
+      <div *ngIf="qrCodeData; else noQrCode" class="qr-code-active">
+        
+        <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + qrCodeData" 
+             alt="QR Code de Emergência" 
+             class="real-qr-img" />
+             
+        <a [routerLink]="linkAcesso" target="_blank" class="qr-link">Acessar Ficha</a>
+        
+      </div>
+      
+      <ng-template #noQrCode>
+        <p class="qr-empty-text">O QR Code de Emergência será gerado automaticamente após salvar o prontuário.</p>
+      </ng-template>
+    </div>
+
+  </div>
+</div>
