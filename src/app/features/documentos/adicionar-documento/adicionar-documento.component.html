@@ -23,7 +23,7 @@
     <span>Cadastrar exames</span>
   </a>
 
-  <a class="action-card">
+  <a class="action-card" (click)="abrirModalDiagnostico()">
     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       <path d="M11 8v6M8 11h6"/>
@@ -39,3 +39,54 @@
     <span>Visualizar</span>
   </a>
 </div>
+
+<p-dialog 
+  [(visible)]="modalDiagnosticoAberto" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  header="Adicionar Diagnóstico"
+  styleClass="modal-agendamento"
+  appendTo="body">
+  
+  <app-diagnostico-form 
+    *ngIf="modalDiagnosticoAberto()"
+    [idAgendamento]="idAgendamento!" 
+    (aoSalvar)="fecharModais()">
+  </app-diagnostico-form>
+  
+</p-dialog>
+
+<p-dialog 
+  [(visible)]="modalReceitaAberta" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  header="Adicionar Receita"
+  styleClass="modal-agendamento"
+  appendTo="body">
+  
+  <app-receita-form 
+    *ngIf="modalReceitaAberta()"
+    [idAgendamento]="idAgendamento!" 
+    (aoSalvar)="fecharModais()">
+  </app-receita-form>
+  
+</p-dialog>
+
+<p-dialog 
+  [(visible)]="modalExameAberto" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  header="Adicionar Exame"
+  styleClass="modal-agendamento"
+  appendTo="body">
+  
+  <app-exame-form 
+    *ngIf="modalExameAberto()"
+    [idAgendamento]="idAgendamento!" 
+    (aoSalvar)="fecharModais()">
+  </app-exame-form>
+
+</p-dialog>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CadastroProntuarioRequest } from '@core/models';
 import { Paciente } from '@core/models';
 
@@ -10,7 +10,14 @@ import { Paciente } from '@core/models';
 export class PacienteService {
   private apiUrl = 'http://localhost:8080/api/pacientes';
 
+  private nomePacienteSource = new BehaviorSubject<string>('Nome'); 
+  nomePaciente$ = this.nomePacienteSource.asObservable();
+
   constructor(private http: HttpClient) {}
+
+  atualizarNomeNaSidebar(novoNome: string) {
+    this.nomePacienteSource.next(novoNome);
+  }
 
   salvarProntuarioCompleto(request: CadastroProntuarioRequest): Observable<Paciente> {
     return this.http.post<Paciente>(`${this.apiUrl}/prontuario`, request);

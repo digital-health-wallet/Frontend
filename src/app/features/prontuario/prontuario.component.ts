@@ -90,6 +90,7 @@ export class ProntuarioComponent implements OnInit {
     this.pacienteService.salvarProntuarioCompleto(request).subscribe({
       next: (pacienteSalvo) => {
         alert('Prontuário salvo com sucesso!');
+        this.pacienteService.atualizarNomeNaSidebar(pacienteSalvo.nome);
         this.linkAcesso = `/emergencia/${pacienteSalvo.codigoEmergencia}`;
         this.qrCodeData = `${window.location.origin}${this.linkAcesso}`;
       },

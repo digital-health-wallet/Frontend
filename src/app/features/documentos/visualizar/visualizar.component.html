@@ -1,4 +1,6 @@
-<div class="page-header">Exames</div>
+<div class="page-header">
+  {{ idAgendamento() ? 'Documentos da Consulta' : 'Meus Documentos Gerais' }}
+</div>
 
 <div class="tabs">
   <button [class.active]="tabAtiva() === 'exames'" (click)="tabAtiva.set('exames')">Exames</button>
@@ -6,34 +8,63 @@
   <button [class.active]="tabAtiva() === 'diagnosticos'" (click)="tabAtiva.set('diagnosticos')">Diagnósticos</button>
 </div>
 
-@if (tabAtiva() === 'exames') {
-  <div class="lista">
-    <h3>Exames</h3>
-    @for (item of exames; track item.nome) {
-      <div class="lista-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-        </svg>
-        <div>
-          <strong>{{ item.nome }}</strong>
-          <span class="item-data">{{ item.data }}</span>
+<div class="conteudo-painel" *ngIf="!carregando(); else spinner">
+  
+  @if (tabAtiva() === 'exames') {
+    <div class="lista">
+      <h3>Exames</h3>
+      @for (item of exames(); track item.id) {
+        <div class="lista-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <div>
+            <strong>{{ item.nomeExame }}</strong>
+            <span class="item-data">{{ item.dataHoraExame | date:'dd/MM/yyyy' }}</span>
+          </div>
         </div>
-      </div>
-    }
-  </div>
-}
+      } @empty {
+        <p class="empty">Nenhum exame cadastrado.</p>
+      }
+    </div>
+  }
 
-@if (tabAtiva() === 'receitas') {
-  <div class="lista">
-    <h3>Receitas</h3>
-    <p class="empty">Nenhuma receita cadastrada.</p>
-  </div>
-}
+  @if (tabAtiva() === 'receitas') {
+    <div class="lista">
+      <h3>Receitas</h3>
+      @for (item of receitas(); track item.id) {
+        <div class="lista-item">
+          <i class="pi pi-file" style="color: #9CA3AF; font-size: 1.2rem;"></i>
+          <div>
+            <strong>Receita Médica - Emissão: {{ item.dataEmissao | date:'dd/MM/yyyy' }}</strong>
+            <span class="item-data">{{ item.orientacoesGerais }}</span>
+          </div>
+        </div>
+      } @empty {
+        <p class="empty">Nenhuma receita cadastrada.</p>
+      }
+    </div>
+  }
 
-@if (tabAtiva() === 'diagnosticos') {
-  <div class="lista">
-    <h3>Diagnósticos</h3>
-    <p class="empty">Nenhum diagnóstico cadastrado.</p>
-  </div>
-}
+  @if (tabAtiva() === 'diagnosticos') {
+    <div class="lista">
+      <h3>Diagnósticos</h3>
+      @for (item of diagnosticos(); track item.id) {
+        <div class="lista-item">
+          <i class="pi pi-heart-fill" style="color: #EF4444;"></i>
+          <div>
+            <strong>{{ item.nome }} @if(item.cid){ (CID: {{ item.cid }}) }</strong>
+            <span class="item-data">{{ item.descricao }}</span>
+          </div>
+        </div>
+      } @empty {
+        <p class="empty">Nenhum diagnóstico cadastrado.</p>
+      }
+    </div>
+  }
+</div>
+
+<ng-template #spinner>
+  <div class="loading-placeholder">Carregando informações clínicas...</div>
+</ng-template>

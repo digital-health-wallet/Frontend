@@ -23,4 +23,31 @@ export class DocumentosService {
   salvarReceita(receita: Receita): Observable<Receita> {
     return this.http.post<Receita>(`${this.apiUrl}/receitas`, receita);
   }
+
+  buscarExamesPorAgendamento(idAgendamento: number): Observable<Exame[]> {
+    return this.http.get<Exame[]>(`${this.apiUrl}/exames/agendamento/${idAgendamento}`);
+  }
+
+  buscarReceitasPorAgendamento(idAgendamento: number): Observable<Receita[]> {
+    return this.http.get<Receita[]>(`${this.apiUrl}/receitas/agendamento/${idAgendamento}`);
+  }
+
+  buscarDiagnosticosPorAgendamento(idAgendamento: number): Observable<Diagnostico[]> {
+    return this.http.get<Diagnostico[]>(`${this.apiUrl}/diagnosticos/agendamento/${idAgendamento}`);
+  }
+
+  listarExamesGerais(idPaciente: number): Observable<Exame[]> {
+    return this.http.get<Exame[]>(`${this.apiUrl}/exames/paciente/${idPaciente}`);
+  }
+
+  listarReceitasGerais(idPaciente: number): Observable<Receita[]> {
+    return this.http.get<Receita[]>(`${this.apiUrl}/receitas/paciente/${idPaciente}`);
+  }
+
+  listarDiagnosticosGerais(idPaciente: number): Observable<Diagnostico[]> {
+    return this.http.get<Diagnostico[]>(`${this.apiUrl}/diagnosticos/paciente/${idPaciente}`);
+  }
+
+  
+
 }
