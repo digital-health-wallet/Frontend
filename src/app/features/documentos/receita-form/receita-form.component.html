@@ -2,8 +2,18 @@
   <h2 class="form-title">Receita</h2>
   
   <div class="upload-area">
-    <button class="btn-primary upload-btn">Enviar</button>
-    <span class="upload-hint">Apenas arquivos de tamanho X formato Y</span>
+    <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept=".pdf,image/png,image/jpeg">
+    
+    <p-button 
+      styleClass="btn-primary" 
+      label="Anexar" 
+      icon="pi pi-upload" 
+      rounded="true"
+      severity="info"
+      (onClick)="fileInput.click()">
+    </p-button>
+    
+    <span class="upload-hint">{{ nomeArquivo ? nomeArquivo : 'PDF, PNG ou JPG' }}</span>
   </div>
 
   <div class="form-group">
@@ -13,21 +23,23 @@
 
   <div class="form-group">
     <label class="label">Nome da medicação</label>
-    <input type="text" class="input-field" placeholder="PraCurá 500mg, Pasta D'água 120mg" [(ngModel)]="medicacao" />
+    <input type="text" class="input-field" placeholder="Ex: PraCurá 500mg, Pasta D'água 120mg" [(ngModel)]="medicacao" />
   </div>
 
   <div class="form-group">
     <label class="label">Posologia</label>
-    <input type="text" class="input-field" placeholder="2 comprimidos 2x ao dia por 7 dias" [(ngModel)]="posologia" />
+    <textarea class="input-field textarea" placeholder="Ex: 2 comprimidos 2x ao dia por 7 dias" [(ngModel)]="posologia"></textarea>
   </div>
 
   <div class="form-footer">
-  <p-button 
-    [label]="carregando ? 'Salvando...' : 'Salvar'" 
-    [icon]="carregando ? 'pi pi-spinner pi-spin' : 'pi pi-bookmark'" 
-    styleClass="btn-primary" 
-    [disabled]="carregando"
-    (onClick)="salvar()">
-  </p-button>
-</div>
+    <p-button 
+      [label]="carregando ? 'Salvando...' : 'Salvar'" 
+      [icon]="carregando ? 'pi pi-spinner pi-spin' : 'pi pi-bookmark'" 
+      styleClass="btn-primary" 
+      [disabled]="carregando"
+      rounded="true"
+      severity="info"
+      (onClick)="salvar()">
+    </p-button>
+  </div>
 </div>

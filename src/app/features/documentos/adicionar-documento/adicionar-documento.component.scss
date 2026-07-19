@@ -62,3 +62,63 @@
     }
   }
 }
+
+/* ---- Layout dos Cartões ---- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  background: var(--bg-card-blue);
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  border: 1px solid transparent;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary-light);
+  }
+
+  span {
+    font-size: var(--font-size-base);
+  }
+}
+
+::ng-deep .modal-agendamento {
+  border-radius: var(--border-radius-lg, 12px) !important;
+  overflow: hidden;
+
+  .p-dialog-header {
+    background: #fff !important;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem !important; 
+    border: none !important;
+  }
+  .p-dialog-content {
+    background: #fff !important;
+    padding: 0 1.5rem 1.5rem 1.5rem !important; 
+  }
+
+  @media (max-width: 768px) {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    
+    .p-dialog-header, .p-dialog-content {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+  }
+}

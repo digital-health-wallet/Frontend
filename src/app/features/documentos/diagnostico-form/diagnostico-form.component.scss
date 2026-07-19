@@ -1,5 +1,10 @@
 .form-card { 
-  max-width: 500px; 
+  width: 100%;
+  max-width: none; 
+  box-shadow: none !important; 
+  border: none !important;
+  background: transparent !important;
+  padding: 0; 
 }
 
 .form-title { 

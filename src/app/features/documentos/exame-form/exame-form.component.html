@@ -8,6 +8,8 @@
       styleClass="btn-primary" 
       label="Anexar" 
       icon="pi pi-upload" 
+      rounded="true"
+      severity="info"
       (onClick)="fileInput.click()">
     </p-button>
     
@@ -35,6 +37,8 @@
     [icon]="carregando ? 'pi pi-spinner pi-spin' : 'pi pi-bookmark'" 
     styleClass="btn-primary" 
     [disabled]="carregando"
+    rounded="true"
+    severity="info"
     (onClick)="salvar()">
   </p-button>
 </div>

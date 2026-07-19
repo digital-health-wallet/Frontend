@@ -1,5 +1,10 @@
 .form-card { 
-  max-width: 500px; 
+  width: 100%;
+  max-width: none; 
+  box-shadow: none !important; 
+  border: none !important;
+  background: transparent !important;
+  padding: 0; 
 }
 
 .form-title { 
@@ -19,14 +24,6 @@
   border-radius: var(--border-radius-md); 
 }
 
-.upload-btn { 
-  background: #EF4444; 
-  
-  &:hover { 
-    background: #DC2626; 
-  } 
-}
-
 .upload-hint { 
   font-size: var(--font-size-xs); 
   color: var(--text-muted); 
@@ -34,6 +31,11 @@
 
 .form-group { 
   margin-bottom: var(--spacing-md); 
+}
+
+.textarea { 
+  min-height: 80px; 
+  resize: vertical; 
 }
 
 .form-footer { 

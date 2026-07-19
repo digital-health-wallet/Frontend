@@ -9,7 +9,8 @@ import { Receita } from '../../../core/models';
   selector: 'app-receita-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonModule],
-  templateUrl: './receita-form.component.html'
+  templateUrl: './receita-form.component.html',
+  styleUrl: './receita-form.component.scss'
 })
 export class ReceitaFormComponent {
   @Input() idAgendamento!: number; 
