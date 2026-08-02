@@ -33,13 +33,29 @@ export interface Profissional {
 
 export interface Paciente {
   id?: number;
-  usuario?: Usuario;
-  endereco?: Endereco;
+  idUsuario: number;
   nome: string;
+  cpf?: string;
   dataNascimento: string;
   codigoEmergencia?: string;
   fichaEmergencialAtiva: boolean;
   tipoSanguineo: string;
+  ativo?: boolean;
+}
+
+// Retorno de GET/PUT /api/pacientes/{id} e POST /api/pacientes/prontuario: não traz idUsuario, mas já inclui a alergia atual.
+export interface PacienteResponse {
+  id: number;
+  nome: string;
+  cpf?: string;
+  dataNascimento: string;
+  tipoSanguineo: string;
+  fichaEmergencialAtiva: boolean;
+  ativo: boolean;
+  codigoEmergencia?: string;
+  possuiAlergia: boolean;
+  tipoAlergia?: TipoAlergia;
+  descricaoAlergia?: string;
 }
 
 export type TipoConsulta = 'CONSULTA' | 'RETORNO' | 'EXAME' | 'EMERGENCIA';
@@ -115,9 +131,12 @@ export interface Upload {
   base64: string;
 }
 
-export interface LoginRequest {
-  email: string;
-  senha: string;
+export interface EmergenciaResponse {
+  nome: string;
+  tipoSanguineo: string;
+  alergias: { tipo: TipoAlergia; descricao: string }[];
+  diagnosticosCronicos: { nome: string; cid?: string; descricao?: string }[];
+  medicamentosUsoContinuo: { nomeMedicamento: string; posologia: string }[];
 }
 
 export interface AgendamentoResumo {
@@ -132,9 +151,19 @@ export interface AgendamentoResumo {
 }
 
 export interface CadastroProntuarioRequest {
-  idUsuario: number;
   cpf: string;
   nome: string;
+  dataNascimento: string;
+  tipoSanguineo: string;
+  fichaEmergencialAtiva: boolean;
+  possuiAlergia: boolean;
+  tipoAlergia?: TipoAlergia;
+  descricaoAlergia?: string;
+}
+
+export interface PacienteUpdateRequest {
+  nome: string;
+  cpf?: string;
   dataNascimento: string;
   tipoSanguineo: string;
   fichaEmergencialAtiva: boolean;

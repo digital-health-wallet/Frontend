@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PacienteService } from '../../core/services/paciente.service';
 import { CadastroProntuarioRequest } from '../../core/models';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-prontuario',
@@ -16,24 +16,29 @@ export class ProntuarioComponent implements OnInit {
   prontuarioForm!: FormGroup;
   qrCodeData: string | null = null;
   linkAcesso: string | null = null;
-  idUsuarioLogado: number = 1; 
 
   tiposSanguineos: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   constructor(
     private fb: FormBuilder,
-    private pacienteService: PacienteService
+    private pacienteService: PacienteService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.watchAlergiaChanges();
+
+    const cpf = this.route.snapshot.queryParamMap.get('cpf');
+    if (cpf) {
+      this.prontuarioForm.get('cpf')?.setValue(cpf);
+    }
   }
 
   private initForm(): void {
     this.prontuarioForm = this.fb.group({
       nome: ['', [Validators.required]],
-      cpf: [''], 
+      cpf: [''],
       dataNascimento: ['', [Validators.required]],
       possuiAlergia: [false, [Validators.required]],
       tipoAlergia: [{ value: '', disabled: true }], 
@@ -76,8 +81,7 @@ export class ProntuarioComponent implements OnInit {
 
     const formValue = this.prontuarioForm.value;
     const request: CadastroProntuarioRequest = {
-      idUsuario: this.idUsuarioLogado,
-      cpf: formValue.cpf || '333.333.333-90', 
+      cpf: formValue.cpf || '333.333.333-90',
       nome: formValue.nome,
       dataNascimento: formValue.dataNascimento,
       tipoSanguineo: formValue.tipoSanguineo,

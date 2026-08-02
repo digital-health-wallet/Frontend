@@ -21,6 +21,13 @@
   border-radius: var(--border-radius-md);
   margin-bottom: var(--spacing-xl);
   margin-top: 10px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+
+  &:hover,
+  &.active {
+    background: rgba(255, 255, 255, 0.4);
+  }
 }
 
 .avatar {

@@ -1,0 +1,98 @@
+<div class="gerenciar-wrapper">
+  <nav class="breadcrumb">
+    Voltar / <span>Gerenciar Paciente</span>
+  </nav>
+
+  <h2 class="form-title-custom">Gerenciar Paciente</h2>
+
+  <div class="content-split">
+    <form [formGroup]="form" (ngSubmit)="salvar()" class="form-section">
+      <div class="form-group">
+        <label class="label">Nome</label>
+        <input type="text" class="input-field" formControlName="nome" placeholder="Digite o nome completo" />
+      </div>
+
+      <div class="form-group">
+        <label class="label">CPF</label>
+        <input type="text" class="input-field" formControlName="cpf" placeholder="000.000.000-00" />
+      </div>
+
+      <div class="form-group">
+        <label class="label">Data Nascimento</label>
+        <input type="date" class="input-field" formControlName="dataNascimento" />
+      </div>
+
+      <div class="form-group">
+        <label class="label">Tipo Sanguíneo</label>
+        <select class="select-field" formControlName="tipoSanguineo">
+          <option value="" disabled selected>Selecione o tipo sanguíneo</option>
+          <option *ngFor="let tipo of tiposSanguineos" [value]="tipo">{{ tipo }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="label">Possui alguma alergia?</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" [value]="true" formControlName="possuiAlergia" /> Sim
+          </label>
+          <label class="radio-label">
+            <input type="radio" [value]="false" formControlName="possuiAlergia" /> Não
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="form.get('possuiAlergia')?.value" class="animated-fade">
+        <div class="form-group">
+          <label class="label">Tipo de Alergia</label>
+          <select class="select-field" formControlName="tipoAlergia">
+            <option value="" disabled selected>Selecione o tipo</option>
+            <option value="M">Medicamentosa</option>
+            <option value="A">Alimentar</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Descrição</label>
+          <input type="text" class="input-field" formControlName="descricaoAlergia" placeholder="Ex: Alérgica a ovo, dipirona" />
+        </div>
+      </div>
+
+      <div class="toggle-container" (click)="toggleFichaEmergencia()">
+        <span class="label mb-0">Habilitar Ficha de Emergência</span>
+        <div class="custom-checkmark" [class.active]="form.get('fichaEmergencialAtiva')?.value">
+          <i class="pi pi-check" *ngIf="form.get('fichaEmergencialAtiva')?.value"></i>
+        </div>
+      </div>
+
+      <div class="acoes">
+        <button type="submit" class="btn-primary btn-salvar" [disabled]="carregando()">
+          <i class="pi pi-save"></i> {{ carregando() ? 'Salvando...' : 'Salvar' }}
+        </button>
+
+        <button type="button" class="btn-danger btn-desativar" (click)="desativarPaciente()">
+          <i class="pi pi-user-minus"></i> Desativar Paciente
+        </button>
+      </div>
+    </form>
+
+    <div class="qr-section">
+      <ng-container *ngIf="form.get('fichaEmergencialAtiva')?.value; else fichaDesativada">
+        <div *ngIf="qrCodeUrl; else semCodigo" class="qr-code-active">
+          <img [src]="qrCodeUrl" alt="QR Code de Emergência" class="real-qr-img" />
+          <a [routerLink]="linkFicha" target="_blank" class="qr-link">Acessar Ficha</a>
+          <p class="qr-hint">
+            Qualquer pessoa que escanear este código vê os dados vitais de emergência do paciente,
+            sem precisar entrar na conta. Vale imprimir e levar com o paciente.
+          </p>
+        </div>
+        <ng-template #semCodigo>
+          <p class="qr-empty-text">Salve o cadastro para gerar o código de emergência.</p>
+        </ng-template>
+      </ng-container>
+      <ng-template #fichaDesativada>
+        <p class="qr-empty-text">A Ficha de Emergência está desativada para este paciente. Habilite-a acima para gerar o QR Code.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

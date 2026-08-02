@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CadastroProntuarioRequest } from '@core/models';
+import { CadastroProntuarioRequest, PacienteUpdateRequest, PacienteResponse } from '@core/models';
 import { Paciente } from '@core/models';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PacienteService {
-  private apiUrl = 'http://localhost:8080/api/pacientes';
+  private apiUrl = `${environment.apiHost}/api/pacientes`;
 
   private nomePacienteSource = new BehaviorSubject<string>('Nome'); 
   nomePaciente$ = this.nomePacienteSource.asObservable();
@@ -19,7 +20,35 @@ export class PacienteService {
     this.nomePacienteSource.next(novoNome);
   }
 
-  salvarProntuarioCompleto(request: CadastroProntuarioRequest): Observable<Paciente> {
-    return this.http.post<Paciente>(`${this.apiUrl}/prontuario`, request);
+  salvarProntuarioCompleto(request: CadastroProntuarioRequest): Observable<PacienteResponse> {
+    return this.http.post<PacienteResponse>(`${this.apiUrl}/prontuario`, request);
+  }
+
+  listarMeus(): Observable<Paciente[]> {
+    return this.http.get<Paciente[]>(`${this.apiUrl}/meus`);
+  }
+
+  buscarPorId(id: number): Observable<PacienteResponse> {
+    return this.http.get<PacienteResponse>(`${this.apiUrl}/${id}`);
+  }
+
+  atualizar(id: number, request: PacienteUpdateRequest): Observable<PacienteResponse> {
+    return this.http.put<PacienteResponse>(`${this.apiUrl}/${id}`, request);
+  }
+
+  inativar(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/inativar`, {});
+  }
+
+  selecionarPaciente(paciente: Paciente): void {
+    if (paciente.id) {
+      localStorage.setItem('idPaciente', String(paciente.id));
+    }
+    this.atualizarNomeNaSidebar(paciente.nome);
+  }
+
+  getIdPacienteSelecionado(): number | null {
+    const id = localStorage.getItem('idPaciente');
+    return id ? Number(id) : null;
   }
 }

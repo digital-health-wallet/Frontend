@@ -1,0 +1,56 @@
+<div class="auth-page">
+  <div class="auth-card card">
+    <div class="auth-logo">
+      <i class="pi pi-shield"></i>
+    </div>
+    <h1 class="auth-title">Meus Pacientes</h1>
+    <p class="auth-subtitle">Selecione ou cadastre um novo paciente para gerenciar</p>
+
+    <div class="pacientes-lista">
+      @for (paciente of pacientes(); track paciente.id) {
+        <div class="paciente-item">
+          <div class="paciente-info">
+            <i class="pi pi-user"></i>
+            <div>
+              <strong>{{ paciente.nome }}</strong>
+              <span>{{ paciente.dataNascimento | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          <button class="btn-outline btn-gerenciar" (click)="gerenciar(paciente)">Gerenciar</button>
+        </div>
+      } @empty {
+        <p class="sem-pacientes">Nenhum paciente cadastrado ainda.</p>
+      }
+    </div>
+
+    <p class="secao-label">Cadastrar Novo Paciente</p>
+
+    <div class="input-with-icon">
+      <span class="icon-left"><i class="pi pi-id-card"></i></span>
+      <input
+        type="text"
+        class="input-field"
+        placeholder="CPF do Novo Paciente"
+        name="cpfNovoPaciente"
+        [(ngModel)]="cpfNovoPaciente"
+      />
+    </div>
+
+    @if (erro()) {
+      <p class="auth-erro">{{ erro() }}</p>
+    }
+
+    <button type="button" class="btn-primary auth-btn-entrar" (click)="cadastrarPaciente()">
+      Cadastrar Paciente
+    </button>
+
+    <div class="auth-divider"><span>ou</span></div>
+
+    <a routerLink="/agendamentos" class="link-menu-principal">Voltar para o Menu Principal</a>
+
+    <p class="usuario-logado">
+      Usuário Logado: {{ nomeUsuario }}
+      <button type="button" class="btn-sair-link" (click)="sair()">Sair</button>
+    </p>
+  </div>
+</div>

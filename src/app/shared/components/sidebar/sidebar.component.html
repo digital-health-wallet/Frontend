@@ -1,11 +1,11 @@
 <aside class="sidebar">
- <div class="sidebar-profile">
+ <a routerLink="/paciente/gerenciar" routerLinkActive="active" class="sidebar-profile" title="Gerenciar paciente">
   <div class="avatar">
     <i class="pi pi-user" style="font-size: 1.2rem"></i>
   </div>
-  
+
   <span class="profile-name">{{ nomeExibido }}</span>
-</div>
+</a>
 
   <nav class="sidebar-nav">
     <a routerLink="/agendamentos" routerLinkActive="active" class="nav-item">
@@ -21,11 +21,6 @@
     <a routerLink="/documentos" routerLinkActive="active" class="nav-item">
       <i class="pi pi-file"></i>
       <span>Documentos</span>
-    </a>
-
-    <a routerLink="/prontuario" routerLinkActive="active" class="nav-item">
-      <i class="pi pi-clipboard"></i>
-      <span>Meu Prontuário</span>
     </a>
 
     <a routerLink="/profissionais" routerLinkActive="active" class="nav-item">
