@@ -1,0 +1,76 @@
+<div class="emergencia-page">
+  @if (ficha(); as f) {
+    <div class="emergencia-card card">
+      <div class="emergencia-icone">
+        <i class="pi pi-heart-fill"></i>
+      </div>
+      <h1 class="emergencia-titulo">Ficha de Emergência</h1>
+      <p class="emergencia-nome">{{ f.nome }}</p>
+
+      <div class="emergencia-tipo-sanguineo">
+        <span class="rotulo">Tipo Sanguíneo</span>
+        <span class="valor">{{ f.tipoSanguineo || 'Não informado' }}</span>
+      </div>
+
+      <div class="emergencia-secao">
+        <h2>Alergias</h2>
+        @if (f.alergias.length) {
+          <ul>
+            @for (alergia of f.alergias; track alergia.descricao) {
+              <li>
+                <strong>{{ alergia.tipo === 'M' ? 'Medicamentosa' : 'Alimentar' }}:</strong>
+                {{ alergia.descricao }}
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="vazio">Nenhuma alergia registrada.</p>
+        }
+      </div>
+
+      <div class="emergencia-secao">
+        <h2>Diagnósticos Crônicos</h2>
+        @if (f.diagnosticosCronicos.length) {
+          <ul>
+            @for (diagnostico of f.diagnosticosCronicos; track diagnostico.nome) {
+              <li>
+                <strong>{{ diagnostico.nome }}</strong>
+                @if (diagnostico.cid) { <span> ({{ diagnostico.cid }})</span> }
+                @if (diagnostico.descricao) { <p>{{ diagnostico.descricao }}</p> }
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="vazio">Nenhum diagnóstico crônico registrado.</p>
+        }
+      </div>
+
+      <div class="emergencia-secao">
+        <h2>Medicamentos de Uso Contínuo</h2>
+        @if (f.medicamentosUsoContinuo.length) {
+          <ul>
+            @for (medicamento of f.medicamentosUsoContinuo; track medicamento.nomeMedicamento) {
+              <li>
+                <strong>{{ medicamento.nomeMedicamento }}</strong> — {{ medicamento.posologia }}
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="vazio">Nenhum medicamento de uso contínuo registrado.</p>
+        }
+      </div>
+    </div>
+  } @else if (carregando()) {
+    <div class="emergencia-card card">
+      <p class="emergencia-status">Carregando ficha...</p>
+    </div>
+  } @else {
+    <div class="emergencia-card card">
+      <div class="emergencia-icone erro">
+        <i class="pi pi-times"></i>
+      </div>
+      <h1 class="emergencia-titulo">Ficha não encontrada</h1>
+      <p class="emergencia-status">Este código de emergência é inválido ou a ficha não está mais ativa.</p>
+    </div>
+  }
+</div>
