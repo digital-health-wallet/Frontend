@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '@env/environment';
 
 export interface AgendamentoResponse {
   id: number;
@@ -43,7 +44,7 @@ export interface AgendamentoRequest {
 @Injectable({ providedIn: 'root' })
 export class AgendamentoService {
 
-  private readonly API = 'http://localhost:8080/api/agendamentos';
+  private readonly API = `${environment.apiHost}/api/agendamentos`;
 
   constructor(private http: HttpClient) {}
 

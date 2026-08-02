@@ -1,14 +1,14 @@
-// documentos.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Diagnostico, Exame, Receita } from '../models';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentosService {
-  private apiUrl = 'http://localhost:8080/api'; 
+  private apiUrl = `${environment.apiHost}/api`;
 
   constructor(private http: HttpClient) {}
 
