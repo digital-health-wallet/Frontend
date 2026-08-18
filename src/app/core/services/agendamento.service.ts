@@ -68,6 +68,10 @@ export class AgendamentoService {
     return this.http.patch<AgendamentoResponse>(`${this.API}/${id}/arquivar`, {});
   }
 
+  desarquivar(id: number): Observable<AgendamentoResponse> {
+    return this.http.patch<AgendamentoResponse>(`${this.API}/${id}/desarquivar`, {});
+  }
+
   toggleFavorito(id: number): Observable<AgendamentoResponse> {
     return this.http.patch<AgendamentoResponse>(`${this.API}/${id}/favorito`, {});
   }

@@ -144,6 +144,19 @@ toggleFiltroFavoritos() {
     selecionados.forEach(ag => {
       this.agendamentoService.arquivar(ag.id).subscribe(() => {
         this.agendamentos.update(lista => lista.filter(item => item.id !== ag.id));
+        this.agendamentosArquivadosSignal.update(lista => [...lista, { ...ag, selecionado: false }]);
+      });
+    });
+  }
+
+  desarquivarSelecionados(): void {
+    const selecionados = this.agendamentosArquivadosSignal().filter(ag => ag.selecionado);
+    if (selecionados.length === 0) return;
+
+    selecionados.forEach(ag => {
+      this.agendamentoService.desarquivar(ag.id).subscribe(() => {
+        this.agendamentosArquivadosSignal.update(lista => lista.filter(item => item.id !== ag.id));
+        this.agendamentos.update(lista => [...lista, { ...ag, selecionado: false }]);
       });
     });
   }
