@@ -19,9 +19,15 @@
 
   @if (abaAtiva() === 'ativos') {
     <div class="actions-bar">
-      <p-button label="Filtrar" icon="pi pi-filter" size="large" (onClick)="toggleFiltro($event)" />
-      <p-button label="Arquivar" icon="pi pi-inbox" size="large" (onClick)="arquivarSelecionados()" />
-      <p-button label="Novo" icon="pi pi-plus-circle" size="large" (click)="abrirModal()" />
+      <p-button label="Filtrar" icon="pi pi-filter" (onClick)="toggleFiltro($event)" />
+      <p-button label="Arquivar" icon="pi pi-inbox" (onClick)="arquivarSelecionados()" />
+      <p-button label="Novo" icon="pi pi-plus-circle" (click)="abrirModal()" />
+    </div>
+  }
+
+  @if (abaAtiva() === 'arquivados') {
+    <div class="actions-bar">
+      <p-button label="Desarquivar" icon="pi pi-history" (onClick)="desarquivarSelecionados()" />
     </div>
   }
 </div>
@@ -100,6 +106,7 @@
     @for (ag of agendamentosArquivados(); track ag.id) {
       <div class="agendamento-card" [@cardAnim]>
         <div class="card-left">
+          <p-checkbox [(ngModel)]="ag.selecionado" [binary]="true" />
           <div class="ag-info">
             <strong>{{ ag.especialidade }} - {{ ag.nomeClinica }}</strong>
             <span class="ag-data">{{ ag.data }} - {{ ag.hora }}</span>
