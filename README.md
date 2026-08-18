@@ -30,6 +30,10 @@ services:
   backend:
     build:
       context: ./Backend
+    env_file:
+      - ./Backend/.env
+    environment:
+      FRONTEND_GOOGLE_CALLBACK_URL: http://localhost/auth/google/callback
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -44,7 +48,16 @@ services:
     restart: unless-stopped
 ```
 
-4. No terminal, execute o seguinte comando para construir e iniciar os contêineres:
+4. Crie um arquivo `Backend/.env` (a partir do `Backend/.env.example`) com as credenciais OAuth do Google Cloud Console (Client ID e Client Secret). Sem isso, a integração com o Google Calendar (RF06) fica indisponível — o restante da aplicação funciona normalmente.
+
+```bash
+GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=seu-client-secret
+```
+
+> Se a máquina estiver em uma rede diferente da que o `Frontend/src/environments/environment.ts` foi configurado, atualize o `apiHost` lá para o IP atual antes de buildar o frontend.
+
+5. No terminal, execute o seguinte comando para construir e iniciar os contêineres:
 
 ### Usando Podman:
 ```bash
@@ -56,8 +69,8 @@ podman-compose up -d --build
 docker compose up -d --build
 ```
 
-5. Aguarde o processo de build (pode levar alguns minutos na primeira vez, pois ele fará o download das dependências do Maven e do NPM).
-6. Assim que os contêineres estiverem em execução (`Up`), a aplicação estará pronta para uso.
+6. Aguarde o processo de build (pode levar alguns minutos na primeira vez, pois ele fará o download das dependências do Maven e do NPM).
+7. Assim que os contêineres estiverem em execução (`Up`), a aplicação estará pronta para uso.
 
 ## Acessando a Aplicação 🌐
 
