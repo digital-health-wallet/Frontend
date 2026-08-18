@@ -1,57 +1,56 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Profissional } from '@core/models';
-import { ProfissionalService } from '@core/services/profissional.service';
+import { Contato } from '@core/models';
+import { ContatoService } from '@core/services/contato.service';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-contatos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DialogModule, ButtonModule],
   templateUrl: './contatos.component.html',
   styleUrl: './contatos.component.scss'
 })
 export class ContatosComponent implements OnInit {
-  private profissionalService = inject(ProfissionalService);
-  private http = inject(HttpClient);
+  private contatoService = inject(ContatoService);
 
-  profissionalSelecionado = signal<Profissional | null>(null);
-  profissionais = signal<Profissional[]>([]);
+  contatos = signal<Contato[]>([]);
   exibirFormulario = signal(false);
 
-  form = this.formVazio();
-
-  formVazio() {
-    return {
-      nomeProfissional: '',
-      especialidade: '',
-      nomeClinica: '',
-      contato: '',
-      email: '',
-      numeroIdentificacaoProfissional: '',
-      cep: '',
-      logradouro: '',
-      numero: '',
-      bairro: '',
-      cidade: '',
-      estado: ''
-    };
-  }
+  form: any = {
+    id: null,
+    nome: '',
+    parentesco: '',
+    telefone: '',
+    email: ''
+  };
 
   ngOnInit(): void {
-    this.carregarProfissionais();
+    this.carregarContatos();
   }
 
-  carregarProfissionais(): void {
-    this.profissionalService.listarTodos().subscribe({
-      next: (dados) => this.profissionais.set(dados),
+  carregarContatos(): void {
+    this.contatoService.listarTodos().subscribe({
+      next: (dados) => this.contatos.set(dados),
       error: (erro) => console.error('Erro ao carregar contatos:', erro)
     });
   }
 
-  abrirFormulario(): void {
-    this.form = this.formVazio();
+  abrirFormulario(contato?: Contato): void {
+    if (contato) {
+      this.form = {
+        id: contato.id,
+        nome: contato.nome || '',
+        parentesco: contato.parentesco || '',
+        telefone: contato.telefone || '',
+        email: contato.email || ''
+      };
+    } else {
+      this.resetarFormulario();
+    }
+
     this.exibirFormulario.set(true);
   }
 
@@ -59,52 +58,34 @@ export class ContatosComponent implements OnInit {
     this.exibirFormulario.set(false);
   }
 
-  buscarCep(): void {
-    const cep = this.form.cep.replace(/\D/g, '');
-    if (cep.length !== 8) return;
-    this.http.get<any>(`https://viacep.com.br/ws/${cep}/json/`).subscribe({
-      next: (dados) => {
-        if (!dados.erro) {
-          this.form.logradouro = dados.logradouro;
-          this.form.bairro = dados.bairro;
-          this.form.cidade = dados.localidade;
-          this.form.estado = dados.uf;
-        }
-      }
-    });
-  }
-
-  salvarProfissional(): void {
-    const payload: any = {
-      nomeProfissional: this.form.nomeProfissional,
-      especialidade: this.form.especialidade,
-      nomeClinica: this.form.nomeClinica,
-      contato: this.form.contato,
-      email: this.form.email,
-      numeroIdentificacaoProfissional: this.form.numeroIdentificacaoProfissional,
-      endereco: {
-        cep: this.form.cep,
-        logradouro: this.form.logradouro,
-        numero: this.form.numero,
-        bairro: this.form.bairro,
-        cidade: this.form.cidade,
-        estado: this.form.estado
-      }
+  salvarContato(): void {
+    const payload: Contato = {
+      id: this.form.id,
+      nome: this.form.nome,
+      parentesco: this.form.parentesco,
+      telefone: this.form.telefone,
+      email: this.form.email
     };
-    this.profissionalService.salvar(payload).subscribe({
+
+    this.contatoService.salvar(payload).subscribe({
       next: () => {
+        this.carregarContatos();
         this.fecharFormulario();
-        this.carregarProfissionais();
       },
-      error: (erro) => console.error('Erro ao salvar profissional:', erro)
+      error: (erro) => {
+        console.error('Erro ao salvar:', erro);
+        alert('Erro ao salvar contato. Verifique o console do backend.');
+      }
     });
   }
 
-  verDetalhes(prof: Profissional): void {
-    this.profissionalSelecionado.set(prof);
-  }
-
-  fecharDetalhes(): void {
-    this.profissionalSelecionado.set(null);
+  private resetarFormulario(): void {
+    this.form = {
+      id: null,
+      nome: '',
+      parentesco: '',
+      telefone: '',
+      email: ''
+    };
   }
 }

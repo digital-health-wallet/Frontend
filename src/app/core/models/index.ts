@@ -31,6 +31,14 @@ export interface Profissional {
   endereco?: Endereco;
 }
 
+export interface Contato {
+  id?: number;
+  nome: string;
+  parentesco?: string;
+  telefone?: string;
+  email?: string;
+}
+
 export interface Paciente {
   id?: number;
   idUsuario: number;
