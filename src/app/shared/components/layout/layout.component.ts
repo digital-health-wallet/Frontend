@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent],
+  imports: [RouterOutlet, SidebarComponent, ToastModule, ConfirmDialogModule],
   template: `
     <div class="app-layout">
+      <p-toast />
+      <p-confirmDialog acceptButtonStyleClass="p-button-danger" rejectButtonStyleClass="p-button-text" />
       <app-sidebar />
       <main class="main-content">
         <router-outlet />

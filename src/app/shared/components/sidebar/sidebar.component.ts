@@ -23,6 +23,14 @@ export class SidebarComponent implements OnInit {
     this.pacienteService.nomePaciente$.subscribe((novoNome) => {
       this.nomeExibido = novoNome;
     });
+
+    const idPaciente = this.pacienteService.getIdPacienteSelecionado();
+    if (idPaciente) {
+      this.pacienteService.buscarPorId(idPaciente).subscribe({
+        next: (paciente) => this.pacienteService.atualizarNomeNaSidebar(paciente.nome),
+        error: () => {}
+      });
+    }
   }
 
   logout(): void {

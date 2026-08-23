@@ -7,6 +7,7 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 
 export const appConfig: ApplicationConfig = {
@@ -20,6 +21,8 @@ export const appConfig: ApplicationConfig = {
         preset: Aura,
         options: { darkModeSelector: '.p-dark' },
       },
-    })
+    }),
+    MessageService,
+    ConfirmationService
   ],
 };
