@@ -20,6 +20,7 @@ export class ProfissionaisComponent implements OnInit {
 
   profissionais = signal<Profissional[]>([]);
   exibirFormulario = signal(false);
+  somenteVisualizacao = signal(false);
 
   form: any = {
     id: null,
@@ -66,7 +67,8 @@ export class ProfissionaisComponent implements OnInit {
     }
   }
 
-  abrirFormulario(profissional?: any): void { 
+  abrirFormulario(profissional?: any, somenteVisualizacao = false): void {
+    this.somenteVisualizacao.set(somenteVisualizacao);
     if (profissional) {
       this.form = {
         id: profissional.id,
@@ -93,6 +95,10 @@ export class ProfissionaisComponent implements OnInit {
 
   fecharFormulario(): void {
     this.exibirFormulario.set(false);
+  }
+
+  entrarModoEdicao(): void {
+    this.somenteVisualizacao.set(false);
   }
 
   salvarProfissional(): void {

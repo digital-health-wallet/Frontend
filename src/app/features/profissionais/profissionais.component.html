@@ -16,9 +16,14 @@
   @for (prof of profissionais(); track prof.id) {
     <div class="prof-card">
       
-      <button class="btn-edit-card" (click)="abrirFormulario(prof)" title="Ver e Editar">
-        <i class="pi pi-pencil"></i> 
-      </button>
+      <div class="card-acoes">
+        <button class="btn-edit-card" (click)="abrirFormulario(prof, true)" title="Visualizar">
+          <i class="pi pi-eye"></i>
+        </button>
+        <button class="btn-edit-card" (click)="abrirFormulario(prof, false)" title="Editar">
+          <i class="pi pi-pencil"></i>
+        </button>
+      </div>
 
       <div class="prof-avatar">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
@@ -36,15 +41,15 @@
   }
 </div>
 
-<p-dialog 
-  [header]="form.id ? 'Editar Profissional' : 'Novo Profissional'" 
-  [(visible)]="exibirFormulario" 
-  [modal]="true" 
-  [draggable]="false" 
+<p-dialog
+  [header]="somenteVisualizacao() ? 'Dados do Profissional' : (form.id ? 'Editar Profissional' : 'Novo Profissional')"
+  [(visible)]="exibirFormulario"
+  [modal]="true"
+  [draggable]="false"
   [resizable]="false"
-  styleClass="modal-agendamento"> 
+  styleClass="modal-agendamento">
 
-  <div class="form-grid-modal">
+  <fieldset class="form-grid-modal" [disabled]="somenteVisualizacao()">
     <div class="form-group full-width">
       <label class="label">Nome do Profissional</label>
       <input class="input-field" placeholder="Ex: Dr. Silva" [(ngModel)]="form.nomeProfissional" />
@@ -109,29 +114,52 @@
         </div>
       </div>
     </div>
-  </div>
+  </fieldset>
 
   <ng-template pTemplate="footer">
     <div class="form-actions">
-      <p-button 
-        class="btn-outline"
-        size="large"
-        label="Cancelar" 
-        severity="danger" 
-        [raised]="true" 
-        (onClick)="fecharFormulario()" 
-        styleClass="btn-outline-ajustado">
-      </p-button>
-      
-      <p-button 
-        class="btn-outline"
-        size="large"
-        label="{{ form.id ? 'Atualizar Dados' : 'Salvar' }}" 
-        severity="info" 
-        [raised]="true" 
-        (onClick)="salvarProfissional()" 
-        styleClass="btn-outline-ajustado">
-      </p-button>
+      @if (somenteVisualizacao()) {
+        <p-button
+          class="btn-outline"
+          size="large"
+          label="Fechar"
+          severity="secondary"
+          [raised]="true"
+          (onClick)="fecharFormulario()"
+          styleClass="btn-outline-ajustado">
+        </p-button>
+
+        <p-button
+          class="btn-outline"
+          size="large"
+          label="Editar"
+          icon="pi pi-pencil"
+          severity="info"
+          [raised]="true"
+          (onClick)="entrarModoEdicao()"
+          styleClass="btn-outline-ajustado">
+        </p-button>
+      } @else {
+        <p-button
+          class="btn-outline"
+          size="large"
+          label="Cancelar"
+          severity="danger"
+          [raised]="true"
+          (onClick)="fecharFormulario()"
+          styleClass="btn-outline-ajustado">
+        </p-button>
+
+        <p-button
+          class="btn-outline"
+          size="large"
+          label="{{ form.id ? 'Atualizar Dados' : 'Salvar' }}"
+          severity="info"
+          [raised]="true"
+          (onClick)="salvarProfissional()"
+          styleClass="btn-outline-ajustado">
+        </p-button>
+      }
     </div>
   </ng-template>
 </p-dialog>
