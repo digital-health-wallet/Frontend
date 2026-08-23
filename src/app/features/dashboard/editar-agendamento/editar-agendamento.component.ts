@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
 import { ProfissionalService } from '@core/services/profissional.service';
+import { PacienteService } from '@core/services/paciente.service';
 import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { ReceitaFormComponent } from '../../documentos/receita-form/receita-form.component';
@@ -24,6 +25,7 @@ export class EditarAgendamentoComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private agendamentoService = inject(AgendamentoService);
   private profissionalService = inject(ProfissionalService);
+  private pacienteService = inject(PacienteService);
   private datePipe = inject(DatePipe);
 
   idAgendamento!: number;
@@ -103,7 +105,7 @@ carregarProfissionais(callback?: () => void): void {
   salvar(): void {
     if (!this.dataAgendamento) return;
     const request: AgendamentoRequest = {
-      idPaciente: 1,
+      idPaciente: this.pacienteService.getIdPacienteSelecionado()!,
       idProfissional: this.idProfissionalSelecionado ?? undefined,
       especialidade: this.especialidade,
       nomeClinica: this.endereco,

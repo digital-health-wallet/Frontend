@@ -14,6 +14,8 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { AgendamentoService, AgendamentoResponse } from '@core/services/agendamento.service';
 import { DialogModule } from 'primeng/dialog';
 import { NovoAgendamentoComponent } from '../novo-agendamento/novo-agendamento.component';
+import { AuthService } from '@core/services/auth.service';
+import { PacienteService } from '@core/services/paciente.service';
 
 @Component({
   selector: 'app-agendamentos',
@@ -33,12 +35,27 @@ import { NovoAgendamentoComponent } from '../novo-agendamento/novo-agendamento.c
 export class AgendamentosComponent implements OnInit {
 
   private agendamentoService = inject(AgendamentoService);
+  private authService = inject(AuthService);
+  private pacienteService = inject(PacienteService);
 
-  private readonly ID_PACIENTE = 1;
-  
+  private get ID_PACIENTE(): number {
+    return this.pacienteService.getIdPacienteSelecionado()!;
+  }
+
+  googleDesconectado = signal(false);
+  bannerGoogleDispensado = signal(false);
 
   ngOnInit() {
     this.carregarAgendamentos();
+    this.googleDesconectado.set(!this.authService.getSessao()?.calendarConectado);
+  }
+
+  conectarGoogle(): void {
+    this.authService.iniciarLoginGoogle();
+  }
+
+  dispensarBannerGoogle(): void {
+    this.bannerGoogleDispensado.set(true);
   }
 
   @ViewChild('filtroPopover') filtroPopover!: Popover;

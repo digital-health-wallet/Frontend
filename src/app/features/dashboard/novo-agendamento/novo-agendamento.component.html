@@ -1,5 +1,12 @@
 
 <div class="card-blue form-container">
+  @if (salvando) {
+    <div class="overlay-salvando">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Salvando consulta...</span>
+    </div>
+  }
+
   <h2 class="form-title">Agendar Consulta</h2>
 
   <div class="form-grid">
@@ -79,7 +86,12 @@
   </div>
 
   <div class="form-footer">
-    <button class="btn-primary" (click)="salvar()">
+    <div class="form-footer-checkbox">
+      <p-checkbox [(ngModel)]="sincronizarGoogleAoSalvar" [binary]="true" inputId="sincronizarGoogleAoSalvar" [disabled]="salvando" />
+      <label for="sincronizarGoogleAoSalvar" class="label">Adicionar ao Google Agenda</label>
+    </div>
+
+    <button class="btn-primary" (click)="salvar()" [disabled]="salvando">
       <i class="pi pi-save"></i>
       Agendar Consulta
     </button>
@@ -96,12 +108,17 @@
   [resizable]="false">
   
   <p *ngIf="carregandoGoogle">Buscando eventos no seu calendário...</p>
-  
-  <div *ngIf="!carregandoGoogle && sugestoesGoogle.length === 0">
+
+  <div *ngIf="!carregandoGoogle && googleNaoConectado" style="text-align: center;">
+    <p>Você ainda não conectou sua conta do Google Calendar.</p>
+    <p-button icon="pi pi-google" label="Conectar com Google" (onClick)="conectarGoogle()"></p-button>
+  </div>
+
+  <div *ngIf="!carregandoGoogle && !googleNaoConectado && sugestoesGoogle.length === 0">
     <p>Nenhum evento encontrado no Google Calendar.</p>
   </div>
 
-  <div *ngIf="!carregandoGoogle && sugestoesGoogle.length > 0">
+  <div *ngIf="!carregandoGoogle && !googleNaoConectado && sugestoesGoogle.length > 0">
     <div class="card mb-3" *ngFor="let evento of sugestoesGoogle" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>

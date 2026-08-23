@@ -153,17 +153,27 @@
   width: 100%;
 }
 
-:host ::ng-deep .modal-documento {
-  
+:host ::ng-deep .modal-agendamento {
+  border-radius: var(--border-radius-lg, 12px) !important;
+  overflow: hidden;
+
   .p-dialog-header {
-    background: transparent !important;
-    border-bottom: none !important;
-    padding: 16px 16px 0 0 !important; 
+    background: #fff !important;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem !important;
+    border: none !important;
+  }
+  .p-dialog-content {
+    background: #fff !important;
+    padding: 0 1.5rem 1.5rem 1.5rem !important;
   }
 
-  .p-dialog-content {
-    padding: 0 !important;
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
+  @media (max-width: 768px) {
+    width: 95vw !important;
+    max-width: 95vw !important;
+
+    .p-dialog-header, .p-dialog-content {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
   }
 }

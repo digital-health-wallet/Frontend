@@ -11,6 +11,19 @@
   </div>
 </div>
 
+@if (googleDesconectado() && !bannerGoogleDispensado()) {
+  <div class="banner-google">
+    <i class="pi pi-google"></i>
+    <span>Sua conta do Google Calendar não está conectada. Conecte pra sincronizar suas consultas automaticamente.</span>
+    <div class="banner-google-acoes">
+      <p-button label="Conectar com Google" size="small" (onClick)="conectarGoogle()" />
+      <button class="banner-google-fechar" (click)="dispensarBannerGoogle()" title="Dispensar">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  </div>
+}
+
 <div class="controls-bar">
   <div class="tab-toggle">
     <button class="tab-btn" [class.active]="abaAtiva() === 'ativos'" (click)="abaAtiva.set('ativos')">Ativos</button>
@@ -97,6 +110,10 @@
           </div>
         </div>
       </div>
+    } @empty {
+      <p class="lista-vazia">
+        {{ agendamentos().length === 0 ? 'Não há agendamentos cadastrados.' : 'Nenhum agendamento encontrado para os filtros aplicados.' }}
+      </p>
     }
   </div>
 }
@@ -127,11 +144,13 @@
           </div>
         </div>
       </div>
+    } @empty {
+      <p class="lista-vazia">Não há agendamentos arquivados.</p>
     }
   </div>
 }
 
-<p-dialog 
+<p-dialog
   [(visible)]="exibirModal" 
   [modal]="true" 
   [draggable]="false" 

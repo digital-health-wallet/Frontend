@@ -17,6 +17,8 @@ export interface AgendamentoResponse {
   status: string;
   favorito: boolean;
   arquivado: boolean;
+  googleEventId?: string;
+  avisoGoogle?: string;
 }
 
 export interface ProfissionalRequest {
@@ -39,6 +41,7 @@ export interface AgendamentoRequest {
   dataAgendamento: string;
   horaAgendamento: string;
   horaFim?: string;
+  sincronizarGoogle?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })

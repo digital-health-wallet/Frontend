@@ -5,14 +5,18 @@ import { RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
 import { ProfissionalService } from '@core/services/profissional.service';
+import { AuthService } from '@core/services/auth.service';
+import { PacienteService } from '@core/services/paciente.service';
 import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-novo-agendamento',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePickerModule, SelectModule, DialogModule, ButtonModule],
+  imports: [CommonModule, FormsModule, DatePickerModule, SelectModule, DialogModule, ButtonModule, CheckboxModule],
   providers: [DatePipe],
   templateUrl: './novo-agendamento.component.html',
   styleUrl: './novo-agendamento.component.scss'
@@ -20,7 +24,10 @@ import { ButtonModule } from 'primeng/button';
 export class NovoAgendamentoComponent {
   private agendamentoService = inject(AgendamentoService);
   private profissionalService = inject(ProfissionalService);
+  private authService = inject(AuthService);
+  private pacienteService = inject(PacienteService);
   private datePipe = inject(DatePipe);
+  private messageService = inject(MessageService);
 
   @Output() salvoComSucesso = new EventEmitter<void>();
   @Output() cancelar = new EventEmitter<void>();
@@ -33,6 +40,8 @@ export class NovoAgendamentoComponent {
   especialidade = '';
   endereco = '';
   dataAgendamento: Date | null = null;
+  sincronizarGoogleAoSalvar = false;
+  salvando = false;
 
   idProfissionalSelecionado: number | null = null;
   profissionaisOpcoes: { label: string; value: number }[] = [];
@@ -50,6 +59,7 @@ export class NovoAgendamentoComponent {
   exibirModalGoogle = false;
   carregandoGoogle = false;
   sugestoesGoogle: any[] = [];
+  googleNaoConectado = false;
 
   especialidadesOpcoes = [
     { label: 'Alergista', value: 'Alergista' },
@@ -96,8 +106,10 @@ onProfissionalChange(): void {
       return;
     }
 
+    this.salvando = true;
+
     const request: AgendamentoRequest = {
-      idPaciente: 1,
+      idPaciente: this.pacienteService.getIdPacienteSelecionado()!,
       idProfissional: this.idProfissionalSelecionado !== -1 ? this.idProfissionalSelecionado ?? undefined : undefined,
       profissional: this.idProfissionalSelecionado === -1 ? {
   nomeProfissional: this.novoProfissional.nomeProfissional,
@@ -109,15 +121,28 @@ onProfissionalChange(): void {
       motivoConsulta: this.motivo,
       tipoConsulta: this.tipoConsulta,
       dataAgendamento: this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!,
-      horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!
+      horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!,
+      sincronizarGoogle: this.sincronizarGoogleAoSalvar
     };
 
     this.agendamentoService.criar(request).subscribe({
-      next: () => {
+      next: (resposta) => {
+        this.salvando = false;
+        if (resposta.avisoGoogle) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Consulta salva',
+            detail: resposta.avisoGoogle,
+            life: 6000
+          });
+        }
         this.salvoComSucesso.emit();
         this.limparFormulario();
       },
-      error: (err) => console.error('Erro ao salvar:', err)
+      error: (err) => {
+        this.salvando = false;
+        console.error('Erro ao salvar:', err);
+      }
     });
   }
 
@@ -129,13 +154,21 @@ onProfissionalChange(): void {
     this.tipoConsulta = 'CONSULTA';
     this.idProfissionalSelecionado = null;
     this.novoProfissional = { nomeProfissional: '' };
+    this.sincronizarGoogleAoSalvar = false;
   }
 
   sincronizarGoogle(): void {
     this.exibirModalGoogle = true;
+    this.googleNaoConectado = false;
+
+    if (!this.authService.getSessao()?.calendarConectado) {
+      this.googleNaoConectado = true;
+      return;
+    }
+
     this.carregandoGoogle = true;
 
-    const idPaciente = 1; 
+    const idPaciente = this.pacienteService.getIdPacienteSelecionado()!;
     const accessToken = 'TOKEN AQUI';
     this.agendamentoService.buscarSugestoesGoogle(idPaciente, accessToken).subscribe({
       next: (dados) => {
@@ -145,8 +178,13 @@ onProfissionalChange(): void {
       error: (err) => {
         console.error('Erro ao buscar no Google', err);
         this.carregandoGoogle = false;
+        this.googleNaoConectado = true;
       }
     });
+  }
+
+  conectarGoogle(): void {
+    this.authService.iniciarLoginGoogle();
   }
 
   usarSugestaoGoogle(evento: any): void {
