@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CadastroProntuarioRequest, PacienteUpdateRequest, PacienteResponse } from '@core/models';
+import { CadastroProntuarioRequest, PacienteUpdateRequest, PacienteResponse, MedicamentoContinuoRequest } from '@core/models';
 import { Paciente } from '@core/models';
 import { environment } from '@env/environment';
 
@@ -38,6 +38,10 @@ export class PacienteService {
 
   inativar(id: number): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}/inativar`, {});
+  }
+
+  adicionarMedicamentosContinuos(id: number, medicamentos: MedicamentoContinuoRequest[]): Observable<PacienteResponse> {
+    return this.http.post<PacienteResponse>(`${this.apiUrl}/${id}/medicamentos-continuos`, medicamentos);
   }
 
   selecionarPaciente(paciente: Paciente): void {

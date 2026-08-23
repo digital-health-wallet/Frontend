@@ -47,6 +47,45 @@
       </div>
 
       <div class="form-group">
+        <label class="label">Usa algum medicamento de uso contínuo?</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" [value]="true" formControlName="usaMedicamentoContinuo" /> Sim
+          </label>
+          <label class="radio-label">
+            <input type="radio" [value]="false" formControlName="usaMedicamentoContinuo" /> Não
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="prontuarioForm.get('usaMedicamentoContinuo')?.value" class="animated-fade" formArrayName="medicamentosContinuos">
+        @for (medGroup of medicamentosContinuos.controls; track $index) {
+          <div [formGroupName]="$index">
+            <div class="form-group">
+              <label class="label">Nome do Medicamento</label>
+              <div class="campo-com-acao">
+                <input type="text" class="input-field" formControlName="nome" placeholder="Ex: Losartana 50mg" />
+                @if (medicamentosContinuos.length > 1) {
+                  <button type="button" class="btn-remover-inline" title="Remover medicamento" (click)="removerMedicamento($index)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="label">Posologia</label>
+              <input type="text" class="input-field" formControlName="posologia" placeholder="Ex: 1 comprimido pela manhã" />
+            </div>
+          </div>
+        }
+
+        <button type="button" class="link-adicionar" (click)="adicionarMedicamento()">
+          <i class="pi pi-plus"></i> Adicionar outro medicamento
+        </button>
+      </div>
+
+      <div class="form-group">
         <label class="label">Tipo Sanguíneo</label>
         <select class="select-field" formControlName="tipoSanguineo">
           <option value="" disabled selected>Selecione o tipo sanguíneo</option>
@@ -86,3 +125,30 @@
 
   </div>
 </div>
+
+<p-dialog
+  header="Prontuário salvo com sucesso!"
+  [(visible)]="exibirModalQrCode"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '90vw', maxWidth: '380px' }"
+  (onHide)="fecharModalQrCode()">
+
+  <div class="modal-qr-content" *ngIf="qrCodeData">
+    <p>Baixe o PDF com o QR Code da ficha de emergência.</p>
+    <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + qrCodeData"
+         alt="QR Code de Emergência"
+         class="modal-qr-img" />
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="baixandoPdf ? 'Gerando PDF...' : 'Baixar PDF'"
+      [icon]="baixandoPdf ? 'pi pi-spinner pi-spin' : 'pi pi-download'"
+      [disabled]="baixandoPdf"
+      severity="info"
+      (onClick)="baixarPdf()">
+    </p-button>
+  </ng-template>
+</p-dialog>

@@ -58,6 +58,51 @@
         </div>
       </div>
 
+      <div class="resumo-clinico" *ngIf="diagnosticosCronicos().length > 0 || medicamentosUsoContinuo().length > 0">
+        <div *ngIf="diagnosticosCronicos().length > 0" class="form-group">
+          <label class="label">Diagnósticos Crônicos</label>
+          <ul class="lista-resumo">
+            <li *ngFor="let d of diagnosticosCronicos()">
+              {{ d.nome }} <span *ngIf="d.cid">(CID: {{ d.cid }})</span>
+            </li>
+          </ul>
+        </div>
+
+        <div *ngIf="medicamentosUsoContinuo().length > 0" class="form-group">
+          <label class="label">Medicamentos de Uso Contínuo</label>
+          <ul class="lista-resumo">
+            <li *ngFor="let m of medicamentosUsoContinuo()">
+              {{ m.nomeMedicamento }} — {{ m.posologia }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="medicamentos-novos">
+        @for (med of novosMedicamentos; track $index) {
+          <div>
+            <div class="form-group">
+              <label class="label">Nome do Medicamento</label>
+              <div class="campo-com-acao">
+                <input type="text" class="input-field" [(ngModel)]="med.nome" [ngModelOptions]="{standalone: true}" placeholder="Ex: Losartana 50mg" />
+                @if (novosMedicamentos.length > 1) {
+                  <button type="button" class="btn-remover-inline" title="Remover medicamento" (click)="removerLinhaMedicamento($index)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                }
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="label">Posologia</label>
+              <input type="text" class="input-field" [(ngModel)]="med.posologia" [ngModelOptions]="{standalone: true}" placeholder="Ex: 1 comprimido pela manhã" />
+            </div>
+          </div>
+        }
+        <button type="button" class="link-adicionar" (click)="adicionarLinhaMedicamento()">
+          <i class="pi pi-plus"></i> Adicionar outro medicamento
+        </button>
+      </div>
+
       <div class="toggle-container" (click)="toggleFichaEmergencia()">
         <span class="label mb-0">Habilitar Ficha de Emergência</span>
         <div class="custom-checkmark" [class.active]="form.get('fichaEmergencialAtiva')?.value">
@@ -96,3 +141,28 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="Ficha de Emergência"
+  [visible]="exibirModalQrCode()"
+  (visibleChange)="fecharModalQrCode()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '90vw', maxWidth: '380px' }">
+
+  <div class="modal-qr-content" *ngIf="qrCodeUrl">
+    <p>Baixe o PDF com o QR Code da ficha de emergência.</p>
+    <img [src]="qrCodeUrl" alt="QR Code de Emergência" class="modal-qr-img" />
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="baixandoPdf() ? 'Gerando PDF...' : 'Baixar PDF'"
+      [icon]="baixandoPdf() ? 'pi pi-spinner pi-spin' : 'pi pi-download'"
+      [disabled]="baixandoPdf()"
+      severity="info"
+      (onClick)="baixarPdf()">
+    </p-button>
+  </ng-template>
+</p-dialog>
