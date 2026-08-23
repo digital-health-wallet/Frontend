@@ -64,6 +64,8 @@ export interface PacienteResponse {
   possuiAlergia: boolean;
   tipoAlergia?: TipoAlergia;
   descricaoAlergia?: string;
+  diagnosticosCronicos: { nome: string; cid?: string; descricao?: string }[];
+  medicamentosUsoContinuo: { nomeMedicamento: string; posologia: string }[];
 }
 
 export type TipoConsulta = 'CONSULTA' | 'RETORNO' | 'EXAME' | 'EMERGENCIA';
@@ -84,7 +86,8 @@ export interface Agendamento {
 
 export interface Diagnostico {
   id?: number;
-  idAgendamento: number;
+  idAgendamento?: number | null;
+  idPaciente?: number | null;
   nome: string;
   cid?: string;
   descricao?: string;
@@ -93,7 +96,8 @@ export interface Diagnostico {
 
 export interface Exame {
   id?: number;
-  idAgendamento?: number | null; 
+  idAgendamento?: number | null;
+  idPaciente?: number | null;
   nomeExame: string;
   dataHoraExame?: string;
   observacoes?: string;
@@ -110,6 +114,7 @@ export interface Medicamento {
 export interface Receita {
   id?: number;
   idAgendamento?: number | null;
+  idPaciente?: number | null;
   dataEmissao?: string;
   orientacoesGerais?: string;
   itens: ItemReceita[];
@@ -158,6 +163,11 @@ export interface AgendamentoResumo {
   selecionado?: boolean;
 }
 
+export interface MedicamentoContinuoRequest {
+  nome: string;
+  posologia: string;
+}
+
 export interface CadastroProntuarioRequest {
   cpf: string;
   nome: string;
@@ -167,6 +177,8 @@ export interface CadastroProntuarioRequest {
   possuiAlergia: boolean;
   tipoAlergia?: TipoAlergia;
   descricaoAlergia?: string;
+  usaMedicamentoContinuo?: boolean;
+  medicamentosContinuos?: MedicamentoContinuoRequest[];
 }
 
 export interface PacienteUpdateRequest {

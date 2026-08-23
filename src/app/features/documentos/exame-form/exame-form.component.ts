@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DocumentosService } from '../../../core/services/documentos.service';
+import { PacienteService } from '../../../core/services/paciente.service';
 import { Exame } from '../../../core/models';
 
 @Component({
@@ -12,12 +13,14 @@ import { Exame } from '../../../core/models';
   templateUrl: './exame-form.component.html',
   styleUrl: './exame-form.component.scss'
 })
-export class ExameFormComponent {
+export class ExameFormComponent implements OnChanges {
   // Opcional: pode ser nulo se for inserido direto na aba de Documentos Avulsos
-  @Input() idAgendamento?: number | null = null; 
+  @Input() idAgendamento?: number | null = null;
+  @Input() exameParaEditar: Exame | null = null;
   @Output() aoSalvar = new EventEmitter<void>();
 
   private documentosService = inject(DocumentosService);
+  private pacienteService = inject(PacienteService);
 
   nomeExame = '';
   dataExame = '';
@@ -27,7 +30,15 @@ export class ExameFormComponent {
   arquivoBase64: string | null = null;
   nomeArquivo = '';
 
-  salvar(): void { 
+  ngOnChanges(): void {
+    if (this.exameParaEditar) {
+      this.nomeExame = this.exameParaEditar.nomeExame;
+      this.dataExame = this.exameParaEditar.dataHoraExame ?? '';
+      this.observacoes = this.exameParaEditar.observacoes ?? '';
+    }
+  }
+
+  salvar(): void {
     if (!this.nomeExame || !this.dataExame) {
       alert('Preencha o nome e a data do exame!');
       return;
@@ -35,26 +46,30 @@ export class ExameFormComponent {
 
     this.carregando = true;
 
-    const novoExame: Exame = {
-      idAgendamento: this.idAgendamento, // Vai nulo se for avulso, vai o ID se for na consulta
+    const exame: Exame = {
+      idAgendamento: this.exameParaEditar?.idAgendamento ?? this.idAgendamento,
+      idPaciente: this.exameParaEditar?.idPaciente ?? this.pacienteService.getIdPacienteSelecionado(),
       nomeExame: this.nomeExame,
       dataHoraExame: this.dataExame,
       observacoes: this.observacoes,
-      uploads: this.arquivoBase64 ? [{ base64: this.arquivoBase64 }] : []
+      uploads: this.arquivoBase64
+        ? [{ base64: this.arquivoBase64 }]
+        : (this.exameParaEditar?.uploads ?? [])
     };
 
-    this.documentosService.salvarExame(novoExame).subscribe({
-      next: (res) => {
-        console.log('Exame salvo no banco!', res);
+    const operacao = this.exameParaEditar?.id
+      ? this.documentosService.atualizarExame(this.exameParaEditar.id, exame)
+      : this.documentosService.salvarExame(exame);
+
+    operacao.subscribe({
+      next: () => {
         this.carregando = false;
-        
-        // Limpa os campos
+
         this.nomeExame = '';
         this.dataExame = '';
         this.observacoes = '';
-        
-        // Avisa o pai pra fechar o modal
-        this.aoSalvar.emit(); 
+
+        this.aoSalvar.emit();
       },
       error: (erro) => {
         console.error('Erro ao salvar exame:', erro);
@@ -64,16 +79,15 @@ export class ExameFormComponent {
     });
   }
 
-
-onFileSelected(event: any): void {
+  onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
       this.nomeArquivo = file.name;
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.arquivoBase64 = e.target.result; // Salva o Base64
+        this.arquivoBase64 = e.target.result;
       };
-      reader.readAsDataURL(file); // Dispara a leitura
+      reader.readAsDataURL(file);
     }
   }
 }

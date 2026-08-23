@@ -3,13 +3,19 @@
 </div>
 
 <div class="tabs">
-  <button [class.active]="tabAtiva() === 'exames'" (click)="tabAtiva.set('exames')">Exames</button>
-  <button [class.active]="tabAtiva() === 'receitas'" (click)="tabAtiva.set('receitas')">Receitas</button>
-  <button [class.active]="tabAtiva() === 'diagnosticos'" (click)="tabAtiva.set('diagnosticos')">Diagnósticos</button>
+  <button [class.active]="tabAtiva() === 'exames'" (click)="tabAtiva.set('exames')">
+    Exames <span class="tab-count">{{ exames().length }}</span>
+  </button>
+  <button [class.active]="tabAtiva() === 'receitas'" (click)="tabAtiva.set('receitas')">
+    Receitas <span class="tab-count">{{ receitas().length }}</span>
+  </button>
+  <button [class.active]="tabAtiva() === 'diagnosticos'" (click)="tabAtiva.set('diagnosticos')">
+    Diagnósticos <span class="tab-count">{{ diagnosticos().length }}</span>
+  </button>
 </div>
 
 <div class="conteudo-painel" *ngIf="!carregando(); else spinner">
-  
+
   @if (tabAtiva() === 'exames') {
     <div class="lista">
       <h3>Exames</h3>
@@ -19,9 +25,25 @@
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
           </svg>
-          <div>
+          <div class="lista-item-conteudo">
             <strong>{{ item.nomeExame }}</strong>
             <span class="item-data">{{ item.dataHoraExame | date:'dd/MM/yyyy' }}</span>
+            @if (item.observacoes) {
+              <span class="item-data">{{ item.observacoes }}</span>
+            }
+            @if (item.uploads && item.uploads.length > 0) {
+              <a [href]="item.uploads[0].base64" target="_blank" class="link-anexo">
+                <i class="pi pi-paperclip"></i> Ver anexo
+              </a>
+            }
+          </div>
+          <div class="lista-item-acoes">
+            <button class="icon-btn" title="Editar" (click)="editarExame(item)">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button class="icon-btn icon-btn-excluir" title="Excluir" (click)="excluirExame(item)">
+              <i class="pi pi-trash"></i>
+            </button>
           </div>
         </div>
       } @empty {
@@ -36,9 +58,30 @@
       @for (item of receitas(); track item.id) {
         <div class="lista-item">
           <i class="pi pi-file" style="color: #9CA3AF; font-size: 1.2rem;"></i>
-          <div>
+          <div class="lista-item-conteudo">
             <strong>Receita Médica - Emissão: {{ item.dataEmissao | date:'dd/MM/yyyy' }}</strong>
-            <span class="item-data">{{ item.orientacoesGerais }}</span>
+            @for (medicamento of item.itens; track medicamento.id) {
+              <span class="item-data">
+                {{ medicamento.medicamento.nomeMedicamento }} — {{ medicamento.posologia }}
+                @if (medicamento.usoContinuo) { <span class="badge-uso-continuo">Uso contínuo</span> }
+              </span>
+            }
+            @if (item.orientacoesGerais) {
+              <span class="item-data">{{ item.orientacoesGerais }}</span>
+            }
+            @if (item.uploads && item.uploads.length > 0) {
+              <a [href]="item.uploads[0].base64" target="_blank" class="link-anexo">
+                <i class="pi pi-paperclip"></i> Ver anexo
+              </a>
+            }
+          </div>
+          <div class="lista-item-acoes">
+            <button class="icon-btn" title="Editar" (click)="editarReceita(item)">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button class="icon-btn icon-btn-excluir" title="Excluir" (click)="excluirReceita(item)">
+              <i class="pi pi-trash"></i>
+            </button>
           </div>
         </div>
       } @empty {
@@ -53,9 +96,17 @@
       @for (item of diagnosticos(); track item.id) {
         <div class="lista-item">
           <i class="pi pi-heart-fill" style="color: #EF4444;"></i>
-          <div>
+          <div class="lista-item-conteudo">
             <strong>{{ item.nome }} @if(item.cid){ (CID: {{ item.cid }}) }</strong>
             <span class="item-data">{{ item.descricao }}</span>
+          </div>
+          <div class="lista-item-acoes">
+            <button class="icon-btn" title="Editar" (click)="editarDiagnostico(item)">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button class="icon-btn icon-btn-excluir" title="Excluir" (click)="excluirDiagnostico(item)">
+              <i class="pi pi-trash"></i>
+            </button>
           </div>
         </div>
       } @empty {
@@ -68,3 +119,42 @@
 <ng-template #spinner>
   <div class="loading-placeholder">Carregando informações clínicas...</div>
 </ng-template>
+
+<p-dialog
+  header="Editar Exame"
+  [visible]="!!exameEmEdicao()"
+  (visibleChange)="fecharEdicaoExame()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="modal-agendamento">
+  @if (exameEmEdicao()) {
+    <app-exame-form [exameParaEditar]="exameEmEdicao()" (aoSalvar)="aoSalvarExame()"></app-exame-form>
+  }
+</p-dialog>
+
+<p-dialog
+  header="Editar Receita"
+  [visible]="!!receitaEmEdicao()"
+  (visibleChange)="fecharEdicaoReceita()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="modal-agendamento">
+  @if (receitaEmEdicao()) {
+    <app-receita-form [receitaParaEditar]="receitaEmEdicao()" (aoSalvar)="aoSalvarReceita()"></app-receita-form>
+  }
+</p-dialog>
+
+<p-dialog
+  header="Editar Diagnóstico"
+  [visible]="!!diagnosticoEmEdicao()"
+  (visibleChange)="fecharEdicaoDiagnostico()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="modal-agendamento">
+  @if (diagnosticoEmEdicao()) {
+    <app-diagnostico-form [diagnosticoParaEditar]="diagnosticoEmEdicao()" (aoSalvar)="aoSalvarDiagnostico()"></app-diagnostico-form>
+  }
+</p-dialog>

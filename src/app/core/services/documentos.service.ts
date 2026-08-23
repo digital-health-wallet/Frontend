@@ -48,6 +48,27 @@ export class DocumentosService {
     return this.http.get<Diagnostico[]>(`${this.apiUrl}/diagnosticos/paciente/${idPaciente}`);
   }
 
-  
+  atualizarExame(id: number, exame: Exame): Observable<Exame> {
+    return this.http.put<Exame>(`${this.apiUrl}/exames/${id}`, exame);
+  }
 
+  atualizarReceita(id: number, receita: Receita): Observable<Receita> {
+    return this.http.put<Receita>(`${this.apiUrl}/receitas/${id}`, receita);
+  }
+
+  atualizarDiagnostico(id: number, diagnostico: Diagnostico): Observable<Diagnostico> {
+    return this.http.put<Diagnostico>(`${this.apiUrl}/diagnosticos/${id}`, diagnostico);
+  }
+
+  excluirExame(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/exames/${id}`);
+  }
+
+  excluirReceita(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/receitas/${id}`);
+  }
+
+  excluirDiagnostico(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/diagnosticos/${id}`);
+  }
 }

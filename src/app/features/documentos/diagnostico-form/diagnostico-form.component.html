@@ -1,5 +1,5 @@
 <div class="card form-card">
-  <h2 class="form-title">Diagnóstico</h2>
+  <h2 class="form-title">{{ diagnosticoParaEditar ? 'Editar Diagnóstico' : 'Diagnóstico' }}</h2>
   
   <div class="form-group">
     <label class="label">Nome do Diagnóstico</label>
@@ -26,7 +26,7 @@
 
   <div class="form-footer">
   <p-button 
-    [label]="carregando ? 'Salvando...' : 'Salvar'" 
+    [label]="carregando ? 'Salvando...' : (diagnosticoParaEditar ? 'Atualizar' : 'Salvar')"
     [icon]="carregando ? 'pi pi-spinner pi-spin' : 'pi pi-bookmark'" 
     styleClass="btn-primary" 
     [disabled]="carregando"

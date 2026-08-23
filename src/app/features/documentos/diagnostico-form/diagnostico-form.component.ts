@@ -1,53 +1,64 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button'; 
+import { ButtonModule } from 'primeng/button';
 import { DocumentosService } from '../../../core/services/documentos.service';
+import { PacienteService } from '../../../core/services/paciente.service';
 import { Diagnostico } from '../../../core/models';
 
 @Component({
   selector: 'app-diagnostico-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule], 
+  imports: [CommonModule, FormsModule, ButtonModule],
   templateUrl: './diagnostico-form.component.html',
   styleUrl: './diagnostico-form.component.scss'
 })
-export class DiagnosticoFormComponent {
-  @Input() idAgendamento!: number; 
+export class DiagnosticoFormComponent implements OnChanges {
+  @Input() idAgendamento?: number | null;
+  @Input() diagnosticoParaEditar: Diagnostico | null = null;
   @Output() aoSalvar = new EventEmitter<void>();
 
   private documentosService = inject(DocumentosService);
+  private pacienteService = inject(PacienteService);
 
   nome = '';
   cid = '';
   descricao = '';
-  doencaCronica = false; 
+  doencaCronica = false;
   carregando = false;
 
-  salvar(): void { 
+  ngOnChanges(): void {
+    if (this.diagnosticoParaEditar) {
+      this.nome = this.diagnosticoParaEditar.nome;
+      this.cid = this.diagnosticoParaEditar.cid ?? '';
+      this.descricao = this.diagnosticoParaEditar.descricao ?? '';
+      this.doencaCronica = this.diagnosticoParaEditar.doencaCronica ?? false;
+    }
+  }
+
+  salvar(): void {
     if (!this.nome) {
       alert('O nome do diagnóstico é obrigatório!');
       return;
     }
 
-    if (!this.idAgendamento) {
-      alert('Erro: Não é possível salvar um diagnóstico fora de uma consulta.');
-      return;
-    }
-
     this.carregando = true;
 
-    const novoDiagnostico: Diagnostico = {
-      idAgendamento: this.idAgendamento,
+    const diagnostico: Diagnostico = {
+      idAgendamento: this.diagnosticoParaEditar?.idAgendamento ?? this.idAgendamento,
+      idPaciente: this.diagnosticoParaEditar?.idPaciente ?? this.pacienteService.getIdPacienteSelecionado(),
       nome: this.nome,
       cid: this.cid,
       descricao: this.descricao,
       doencaCronica: this.doencaCronica
     };
 
-    this.documentosService.salvarDiagnostico(novoDiagnostico).subscribe({
-      next: (res) => {
-        console.log('Diagnóstico salvo no banco!', res);
+    const operacao = this.diagnosticoParaEditar?.id
+      ? this.documentosService.atualizarDiagnostico(this.diagnosticoParaEditar.id, diagnostico)
+      : this.documentosService.salvarDiagnostico(diagnostico);
+
+    operacao.subscribe({
+      next: () => {
         this.carregando = false;
 
         this.nome = '';

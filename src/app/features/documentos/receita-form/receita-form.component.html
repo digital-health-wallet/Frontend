@@ -1,5 +1,5 @@
 <div class="card form-card">
-  <h2 class="form-title">Receita</h2>
+  <h2 class="form-title">{{ receitaParaEditar ? 'Editar Receita' : 'Receita' }}</h2>
   
   <div class="upload-area">
     <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;" accept=".pdf,image/png,image/jpeg">
@@ -31,9 +31,17 @@
     <textarea class="input-field textarea" placeholder="Ex: 2 comprimidos 2x ao dia por 7 dias" [(ngModel)]="posologia"></textarea>
   </div>
 
+  <div class="form-group checkbox-group">
+    <label class="checkbox-container">
+      <input type="checkbox" [(ngModel)]="usoContinuo" />
+      <span class="checkmark"></span>
+      Medicamento de uso contínuo
+    </label>
+  </div>
+
   <div class="form-footer">
     <p-button 
-      [label]="carregando ? 'Salvando...' : 'Salvar'" 
+      [label]="carregando ? 'Salvando...' : (receitaParaEditar ? 'Atualizar' : 'Salvar')"
       [icon]="carregando ? 'pi pi-spinner pi-spin' : 'pi pi-bookmark'" 
       styleClass="btn-primary" 
       [disabled]="carregando"

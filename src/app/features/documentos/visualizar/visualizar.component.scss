@@ -23,12 +23,31 @@
     transition: all var(--transition-fast);
     cursor: pointer;
 
-    &.active { 
-      color: var(--text-primary); 
-      font-weight: 700; 
-      border-color: var(--text-primary); 
+    &.active {
+      color: var(--text-primary);
+      font-weight: 700;
+      border-color: var(--text-primary);
     }
     &:hover { color: var(--text-primary); }
+  }
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--border-radius-full);
+  background: var(--border-color);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+
+  .active & {
+    background: var(--color-primary);
+    color: white;
   }
 }
 
@@ -58,13 +77,78 @@
     font-size: var(--font-size-sm); 
   }
   
-  .item-data { 
-    font-size: var(--font-size-xs); 
-    color: var(--text-secondary); 
+  .item-data {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
   }
 }
 
-.empty { 
+.lista-item-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.lista-item-acoes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-sm);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--color-primary);
+  }
+}
+
+.icon-btn-excluir:hover {
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.badge-uso-continuo {
+  display: inline-block;
+  margin-left: var(--spacing-sm);
+  padding: 1px 8px;
+  border-radius: var(--border-radius-full);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.link-anexo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  width: fit-content;
+
+  &:hover { text-decoration: underline; }
+}
+
+.empty {
   color: var(--text-muted); 
   font-size: var(--font-size-sm); 
 }
