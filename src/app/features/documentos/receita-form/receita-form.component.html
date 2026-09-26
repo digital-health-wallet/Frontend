@@ -21,23 +21,46 @@
     <input type="date" class="input-field" [(ngModel)]="dataReceita" />
   </div>
 
-  <div class="form-group">
-    <label class="label">Nome da medicação</label>
-    <input type="text" class="input-field" placeholder="Ex: PraCurá 500mg, Pasta D'água 120mg" [(ngModel)]="medicacao" />
-  </div>
+  @for (item of itens; track $index) {
+    <div class="form-group">
+      <label class="label">Nome da medicação *</label>
+      <div class="campo-com-acao">
+        <input type="text" class="input-field" placeholder="Ex: PraCurá 500mg, Pasta D'água 120mg"
+               [(ngModel)]="item.medicacao" [name]="'medicacao' + $index"
+               [class.campo-invalido]="submetido && !item.medicacao" />
+        @if (itens.length > 1) {
+          <button type="button" class="btn-remover-inline" title="Remover medicamento" (click)="removerMedicamento($index)">
+            <i class="pi pi-trash"></i>
+          </button>
+        }
+      </div>
+      @if (submetido && !item.medicacao) {
+        <small class="mensagem-erro">Informe o nome da medicação.</small>
+      }
+    </div>
 
-  <div class="form-group">
-    <label class="label">Posologia</label>
-    <textarea class="input-field textarea" placeholder="Ex: 2 comprimidos 2x ao dia por 7 dias" [(ngModel)]="posologia"></textarea>
-  </div>
+    <div class="form-group">
+      <label class="label">Posologia *</label>
+      <textarea class="input-field textarea" placeholder="Ex: 2 comprimidos 2x ao dia por 7 dias"
+                [(ngModel)]="item.posologia" [name]="'posologia' + $index"
+                [class.campo-invalido]="submetido && !item.posologia"></textarea>
+      @if (submetido && !item.posologia) {
+        <small class="mensagem-erro">Informe a posologia.</small>
+      }
+    </div>
 
-  <div class="form-group checkbox-group">
-    <label class="checkbox-container">
-      <input type="checkbox" [(ngModel)]="usoContinuo" />
-      <span class="checkmark"></span>
-      Medicamento de uso contínuo
-    </label>
-  </div>
+    <div class="form-group checkbox-group">
+      <label class="checkbox-container">
+        <input type="checkbox" [(ngModel)]="item.usoContinuo" [name]="'usoContinuo' + $index" />
+        <span class="checkmark"></span>
+        Medicamento de uso contínuo
+      </label>
+    </div>
+  }
+
+  <button type="button" class="link-adicionar" (click)="adicionarMedicamento()">
+    <i class="pi pi-plus"></i> Adicionar outro medicamento
+  </button>
 
   <div class="form-footer">
     <p-button 

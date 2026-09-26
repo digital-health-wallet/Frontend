@@ -2,9 +2,22 @@ import { Component, Input, Output, EventEmitter, inject, OnChanges } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 import { DocumentosService } from '../../../core/services/documentos.service';
 import { PacienteService } from '../../../core/services/paciente.service';
 import { Receita } from '../../../core/models';
+
+interface ItemFormulario {
+  id?: number;
+  idMedicamento?: number;
+  medicacao: string;
+  posologia: string;
+  usoContinuo: boolean;
+}
+
+function novoItem(): ItemFormulario {
+  return { medicacao: '', posologia: '', usoContinuo: false };
+}
 
 @Component({
   selector: 'app-receita-form',
@@ -20,36 +33,56 @@ export class ReceitaFormComponent implements OnChanges {
   @Output() aoSalvar = new EventEmitter<void>();
 
   private documentosService = inject(DocumentosService);
+  private messageService = inject(MessageService);
   private pacienteService = inject(PacienteService);
 
   dataReceita = '';
-  medicacao = '';
-  posologia = '';
   orientacoes = '';
-  usoContinuo = false;
   carregando = false;
+
+  /** RF09 - uma receita comporta vários medicamentos, cada um com posologia própria. */
+  itens: ItemFormulario[] = [novoItem()];
+  submetido = false;
   arquivoBase64: string | null = null;
   nomeArquivo = '';
 
   ngOnChanges(): void {
     if (this.receitaParaEditar) {
-      const item = this.receitaParaEditar.itens?.[0];
-      this.medicacao = item?.medicamento?.nomeMedicamento ?? '';
-      this.posologia = item?.posologia ?? '';
-      this.usoContinuo = item?.usoContinuo ?? false;
+      const itens = this.receitaParaEditar.itens ?? [];
+      this.itens = itens.length
+        ? itens.map(item => ({
+            id: item.id,
+            idMedicamento: item.medicamento?.id,
+            medicacao: item.medicamento?.nomeMedicamento ?? '',
+            posologia: item.posologia ?? '',
+            usoContinuo: item.usoContinuo ?? false
+          }))
+        : [novoItem()];
       this.orientacoes = this.receitaParaEditar.orientacoesGerais ?? '';
     }
   }
 
+  adicionarMedicamento(): void {
+    this.itens = [...this.itens, novoItem()];
+  }
+
+  removerMedicamento(indice: number): void {
+    this.itens = this.itens.filter((_, i) => i !== indice);
+  }
+
   salvar(): void {
-    if (!this.medicacao || !this.posologia) {
-      alert('Preencha a medicação e a posologia!');
+    this.submetido = true;
+
+    if (this.itens.some(item => !item.medicacao || !item.posologia)) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campos obrigatórios',
+        detail: 'Informe o nome da medicação e a posologia de todos os medicamentos.'
+      });
       return;
     }
 
     this.carregando = true;
-
-    const itemExistente = this.receitaParaEditar?.itens?.[0];
 
     const receita: Receita = {
       idAgendamento: this.receitaParaEditar?.idAgendamento ?? this.idAgendamento,
@@ -58,14 +91,12 @@ export class ReceitaFormComponent implements OnChanges {
       uploads: this.arquivoBase64
         ? [{ base64: this.arquivoBase64 }]
         : (this.receitaParaEditar?.uploads ?? []),
-      itens: [
-        {
-          id: itemExistente?.id,
-          medicamento: { id: itemExistente?.medicamento?.id, nomeMedicamento: this.medicacao },
-          posologia: this.posologia,
-          usoContinuo: this.usoContinuo
-        }
-      ]
+      itens: this.itens.map(item => ({
+        id: item.id,
+        medicamento: { id: item.idMedicamento, nomeMedicamento: item.medicacao },
+        posologia: item.posologia,
+        usoContinuo: item.usoContinuo
+      }))
     };
 
     const operacao = this.receitaParaEditar?.id
@@ -75,15 +106,18 @@ export class ReceitaFormComponent implements OnChanges {
     operacao.subscribe({
       next: () => {
         this.carregando = false;
-        this.medicacao = '';
-        this.posologia = '';
+        this.submetido = false;
+        this.itens = [novoItem()];
         this.orientacoes = '';
-        this.usoContinuo = false;
         this.aoSalvar.emit();
       },
       error: (erro) => {
         console.error('Erro ao salvar receita:', erro);
-        alert('Ocorreu um erro ao salvar. Tente novamente.');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro ao salvar',
+          detail: erro?.error?.mensagem ?? 'Não foi possível salvar a receita. Tente novamente.'
+        });
         this.carregando = false;
       }
     });
