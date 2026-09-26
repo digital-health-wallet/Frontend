@@ -1,4 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Contato } from '@core/models';
@@ -15,6 +16,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ContatosComponent implements OnInit {
   private contatoService = inject(ContatoService);
+  private messageService = inject(MessageService);
 
   contatos = signal<Contato[]>([]);
   exibirFormulario = signal(false);
@@ -74,7 +76,7 @@ export class ContatosComponent implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao salvar:', erro);
-        alert('Erro ao salvar contato. Verifique o console do backend.');
+        this.messageService.add({ severity: 'error', summary: 'Erro ao salvar', detail: erro?.error?.mensagem ?? 'Não foi possível salvar o contato. Tente novamente.' });
       }
     });
   }

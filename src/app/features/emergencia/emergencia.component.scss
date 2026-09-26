@@ -104,3 +104,13 @@
     color: var(--text-muted);
   }
 }
+
+.emergencia-sem-condicoes {
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-hover, #f1f3f4);
+  color: var(--text-secondary);
+  text-align: center;
+  font-weight: 600;
+}

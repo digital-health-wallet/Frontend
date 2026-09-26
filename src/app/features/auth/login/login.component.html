@@ -59,8 +59,16 @@
           <p class="auth-erro">{{ erro() }}</p>
         }
 
+        @if (aviso()) {
+          <p class="auth-aviso">{{ aviso() }}</p>
+        }
+
         <button type="submit" class="btn-primary auth-btn-entrar" [disabled]="carregando()">
           {{ carregando() ? 'Verificando...' : 'Entrar' }}
+        </button>
+
+        <button type="button" class="btn-voltar-email" [disabled]="carregando()" (click)="reenviarCodigo()">
+          Reenviar Código
         </button>
 
         <button type="button" class="btn-voltar-email" (click)="voltarParaEmail()">

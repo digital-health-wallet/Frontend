@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,6 +21,7 @@ export class GerenciarPacienteComponent implements OnInit {
   private fb = inject(FormBuilder);
   private pacienteService = inject(PacienteService);
   private router = inject(Router);
+  private messageService = inject(MessageService);
 
   novosMedicamentos: MedicamentoContinuoRequest[] = [{ nome: '', posologia: '' }];
   exibirModalQrCode = signal(false);
@@ -154,12 +156,12 @@ export class GerenciarPacienteComponent implements OnInit {
       pdf.addImage(qrBase64, 'PNG', 20, 50, 80, 80);
       pdf.save('ficha-emergencia.pdf');
 
-      alert('PDF salvo com sucesso!');
+      this.messageService.add({ severity: 'success', summary: 'PDF gerado', detail: 'O arquivo foi salvo no seu dispositivo.' });
       this.exibirModalQrCode.set(false);
       this.router.navigate(['/agendamentos']);
     } catch (err) {
       console.error('Erro ao gerar PDF:', err);
-      alert('Erro ao gerar o PDF. Tente novamente.');
+      this.messageService.add({ severity: 'error', summary: 'Erro ao gerar PDF', detail: 'Não foi possível gerar o arquivo. Tente novamente.' });
     } finally {
       this.baixandoPdf.set(false);
     }
@@ -218,14 +220,14 @@ export class GerenciarPacienteComponent implements OnInit {
           error: (err) => {
             console.error('Erro ao adicionar medicamento:', err);
             this.carregando.set(false);
-            alert('Dados salvos, mas houve erro ao adicionar o medicamento.');
+            this.messageService.add({ severity: 'warn', summary: 'Dados salvos', detail: 'O medicamento de uso contínuo não pôde ser adicionado.' });
           }
         });
       },
       error: (err) => {
         console.error('Erro ao atualizar paciente:', err);
         this.carregando.set(false);
-        alert('Erro ao atualizar os dados. Verifique o console.');
+        this.messageService.add({ severity: 'error', summary: 'Erro ao salvar', detail: err?.error?.mensagem ?? 'Não foi possível atualizar os dados. Tente novamente.' });
       }
     });
   }
@@ -260,7 +262,7 @@ export class GerenciarPacienteComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao desativar paciente:', err);
-        alert('Erro ao desativar o paciente. Verifique o console.');
+        this.messageService.add({ severity: 'error', summary: 'Erro ao desativar', detail: err?.error?.mensagem ?? 'Não foi possível desativar o paciente. Tente novamente.' });
       }
     });
   }

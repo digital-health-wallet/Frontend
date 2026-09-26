@@ -19,6 +19,7 @@ export class LoginComponent {
   email = '';
   codigo = '';
   erro = signal<string | null>(null);
+  aviso = signal<string | null>(null);
   carregando = signal(false);
 
   solicitarCodigo(): void {
@@ -50,6 +51,7 @@ export class LoginComponent {
     }
 
     this.erro.set(null);
+    this.aviso.set(null);
     this.carregando.set(true);
 
     this.authService.verificarOtp(this.email, this.codigo).subscribe({
@@ -65,10 +67,33 @@ export class LoginComponent {
     });
   }
 
+  /**
+   * UC01 - Fluxo Alternativo: gera um novo código. O backend invalida o anterior
+   * ao emitir o novo, então o código antigo deixa de funcionar.
+   */
+  reenviarCodigo(): void {
+    this.erro.set(null);
+    this.aviso.set(null);
+    this.carregando.set(true);
+    this.codigo = '';
+
+    this.authService.solicitarOtp(this.email).subscribe({
+      next: () => {
+        this.carregando.set(false);
+        this.aviso.set('Enviamos um novo código. O código anterior não é mais válido.');
+      },
+      error: () => {
+        this.carregando.set(false);
+        this.erro.set('Não foi possível reenviar o código. Tente novamente.');
+      }
+    });
+  }
+
   voltarParaEmail(): void {
     this.etapa.set('email');
     this.codigo = '';
     this.erro.set(null);
+    this.aviso.set(null);
   }
 
   entrarComGoogle(): void {

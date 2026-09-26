@@ -12,6 +12,10 @@
         <span class="valor">{{ f.tipoSanguineo || 'Não informado' }}</span>
       </div>
 
+      @if (semCondicoesRelatadas()) {
+        <p class="emergencia-sem-condicoes">Nenhuma alergia ou condição severa relatada</p>
+      }
+
       <div class="emergencia-secao">
         <h2>Alergias</h2>
         @if (f.alergias.length) {
@@ -69,7 +73,7 @@
       <div class="emergencia-icone erro">
         <i class="pi pi-times"></i>
       </div>
-      <h1 class="emergencia-titulo">Ficha não encontrada</h1>
+      <h1 class="emergencia-titulo">Acesso Negado</h1>
       <p class="emergencia-status">Este código de emergência é inválido ou a ficha não está mais ativa.</p>
     </div>
   }

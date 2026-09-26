@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EmergenciaService } from '@core/services/emergencia.service';
@@ -17,6 +17,13 @@ export class EmergenciaComponent implements OnInit {
 
   ficha = signal<EmergenciaResponse | null>(null);
   carregando = signal(true);
+
+  /** UC06 - Fluxo Alternativo: paciente autorizou a ficha, mas não possui comorbidades. */
+  semCondicoesRelatadas = computed(() => {
+    const f = this.ficha();
+    return !!f && !f.alergias.length && !f.diagnosticosCronicos.length
+        && !f.medicamentosUsoContinuo.length;
+  });
 
   ngOnInit(): void {
     const codigo = this.route.snapshot.paramMap.get('codigo');
