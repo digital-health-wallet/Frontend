@@ -40,6 +40,8 @@ export class NovoAgendamentoComponent {
   especialidade = '';
   endereco = '';
   dataAgendamento: Date | null = null;
+  horaFim: Date | null = null;
+  submetido = false;
   sincronizarGoogleAoSalvar = false;
   salvando = false;
 
@@ -101,8 +103,14 @@ onProfissionalChange(): void {
 }
 
   salvar(): void {
-    if (!this.dataAgendamento) {
-      alert('Selecione a data e hora.');
+    this.submetido = true;
+
+    if (!this.dataAgendamento || !this.especialidade) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campos obrigatórios',
+        detail: 'Informe a especialidade e a data e hora da consulta.'
+      });
       return;
     }
 
@@ -122,6 +130,7 @@ onProfissionalChange(): void {
       tipoConsulta: this.tipoConsulta,
       dataAgendamento: this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!,
       horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!,
+      horaFim: this.horaFim ? this.datePipe.transform(this.horaFim, 'HH:mm:ss')! : undefined,
       sincronizarGoogle: this.sincronizarGoogleAoSalvar
     };
 
@@ -141,16 +150,23 @@ onProfissionalChange(): void {
       },
       error: (err) => {
         this.salvando = false;
-        console.error('Erro ao salvar:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Não foi possível agendar',
+          detail: err?.error?.mensagem ?? 'Ocorreu um erro ao salvar a consulta. Tente novamente.',
+          life: 6000
+        });
       }
     });
   }
 
   limparFormulario() {
+    this.submetido = false;
     this.motivo = '';
     this.especialidade = '';
     this.endereco = '';
     this.dataAgendamento = null;
+    this.horaFim = null;
     this.tipoConsulta = 'CONSULTA';
     this.idProfissionalSelecionado = null;
     this.novoProfissional = { nomeProfissional: '' };

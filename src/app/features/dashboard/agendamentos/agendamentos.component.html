@@ -92,13 +92,27 @@
           <a [routerLink]="['/agendamentos', ag.id, 'documentos']" class="icon-btn" title="Documentos">
             <i class="pi pi-file" style="font-size: 1.1rem"></i>
           </a>
-          <a [routerLink]="['/agendamentos', ag.id, 'editar']" class="icon-btn" title="Editar">
-            <i class="pi pi-pencil" style="font-size: 1.1rem"></i>
-          </a>
+          @if (finalizada(ag)) {
+            <span class="icon-btn desabilitado" title="Consulta finalizada não pode ser reagendada">
+              <i class="pi pi-pencil" style="font-size: 1.1rem"></i>
+            </span>
+          } @else {
+            <a [routerLink]="['/agendamentos', ag.id, 'editar']" class="icon-btn" title="Reagendar">
+              <i class="pi pi-pencil" style="font-size: 1.1rem"></i>
+            </a>
+          }
+          <button type="button" class="icon-btn"
+                  [class.desabilitado]="finalizada(ag) || cancelada(ag)"
+                  [disabled]="finalizada(ag) || cancelada(ag)"
+                  [title]="finalizada(ag) ? 'Consulta finalizada não pode ser cancelada' : 'Cancelar'"
+                  (click)="cancelarConsulta(ag)">
+            <i class="pi pi-times" style="font-size: 1.1rem"></i>
+          </button>
           <div class="status-badge-wrapper" [ngClass]="getStatusClassById(ag.id)">
            <p-select 
   [options]="opcoesStatus"
   [ngModel]="ag.status"
+  [disabled]="finalizada(ag)"
   (onChange)="onStatusChange(ag, $event.value)"
   optionLabel="label" 
   optionValue="value"

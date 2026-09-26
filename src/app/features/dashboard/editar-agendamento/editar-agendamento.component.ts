@@ -7,6 +7,7 @@ import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/ag
 import { ProfissionalService } from '@core/services/profissional.service';
 import { PacienteService } from '@core/services/paciente.service';
 import { SelectModule } from 'primeng/select';
+import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { ReceitaFormComponent } from '../../documentos/receita-form/receita-form.component';
 import { ExameFormComponent } from '../../documentos/exame-form/exame-form.component';
@@ -27,6 +28,7 @@ export class EditarAgendamentoComponent implements OnInit {
   private profissionalService = inject(ProfissionalService);
   private pacienteService = inject(PacienteService);
   private datePipe = inject(DatePipe);
+  private messageService = inject(MessageService);
 
   idAgendamento!: number;
   motivo = '';
@@ -34,6 +36,7 @@ export class EditarAgendamentoComponent implements OnInit {
   endereco = '';
   tipoConsulta = 'CONSULTA';
   dataAgendamento: Date | null = null;
+  horaFim: Date | null = null;
   idProfissionalSelecionado: number | null = null;
   profissionaisOpcoes: { label: string; value: number }[] = [];
 
@@ -94,6 +97,10 @@ carregarProfissionais(callback?: () => void): void {
           const [hora, minuto] = dados.horaAgendamento.split(':').map(Number);
           this.dataAgendamento = new Date(ano, mes - 1, dia, hora, minuto);
         }
+        if (dados.horaFim) {
+          const [horaF, minutoF] = dados.horaFim.split(':').map(Number);
+          this.horaFim = new Date(1970, 0, 1, horaF, minutoF);
+        }
       },
       error: (err) => {
         console.error('Agendamento não encontrado', err);
@@ -112,11 +119,17 @@ carregarProfissionais(callback?: () => void): void {
       motivoConsulta: this.motivo,
       tipoConsulta: this.tipoConsulta,
       dataAgendamento: this.datePipe.transform(this.dataAgendamento, 'yyyy-MM-dd')!,
-      horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!
+      horaAgendamento: this.datePipe.transform(this.dataAgendamento, 'HH:mm:ss')!,
+      horaFim: this.horaFim ? this.datePipe.transform(this.horaFim, 'HH:mm:ss')! : undefined
     };
     this.agendamentoService.atualizar(this.idAgendamento, request).subscribe({
       next: () => this.router.navigate(['/agendamentos']),
-      error: (err) => console.error('Erro ao atualizar:', err)
+      error: (err) => this.messageService.add({
+        severity: 'error',
+        summary: 'Não foi possível reagendar',
+        detail: err?.error?.mensagem ?? 'Ocorreu um erro ao atualizar a consulta. Tente novamente.',
+        life: 6000
+      })
     });
   }
 }

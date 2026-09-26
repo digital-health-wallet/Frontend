@@ -30,8 +30,9 @@
   </div>
 }
       <div class="form-group">
-  <label class="label">Especialidade</label>
+  <label class="label">Especialidade *</label>
   <p-select 
+    [class.campo-invalido]="submetido && !especialidade"
     [options]="especialidadesOpcoes" 
     [(ngModel)]="especialidade" 
     optionLabel="label" 
@@ -39,6 +40,9 @@
     placeholder="Selecione a especialidade" 
     styleClass="w-full input-prime">
   </p-select>
+  @if (submetido && !especialidade) {
+    <small class="mensagem-erro">Selecione a especialidade.</small>
+  }
 </div>
 
 <div class="form-group">
@@ -66,14 +70,29 @@
 
     <div class="form-right">
       <div class="form-group">
-        <label class="label">Data e Hora da Consulta</label>
-        <p-datepicker 
+        <label class="label">Data e Hora da Consulta *</label>
+        <p-datepicker
+          [class.campo-invalido]="submetido && !dataAgendamento"
           [(ngModel)]="dataAgendamento" 
           [showIcon]="true" 
           [showTime]="true" 
           hourFormat="24"
           dateFormat="dd/mm/yy"
           placeholder="Selecione a data e horário"
+          styleClass="w-full">
+        </p-datepicker>
+        @if (submetido && !dataAgendamento) {
+          <small class="mensagem-erro">Informe a data e a hora da consulta.</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="label">Hora de Término</label>
+        <p-datepicker
+          [(ngModel)]="horaFim"
+          [timeOnly]="true"
+          hourFormat="24"
+          placeholder="Selecione o horário de término"
           styleClass="w-full">
         </p-datepicker>
       </div>

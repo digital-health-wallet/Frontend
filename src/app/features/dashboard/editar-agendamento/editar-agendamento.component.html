@@ -66,6 +66,16 @@
         </p-datepicker>
       </div>
 
+      <div class="form-group">
+        <label class="label">Hora de Término</label>
+        <p-datepicker
+          [(ngModel)]="horaFim"
+          [timeOnly]="true"
+          hourFormat="24"
+          styleClass="datepicker-custom w-full">
+        </p-datepicker>
+      </div>
+
       <div class="extra-actions">
         <button class="btn-outline" (click)="exibirModalExame.set(true)">
           <i class="pi pi-file-plus"></i> Adicionar Documentos

@@ -374,3 +374,10 @@
   }
 }
 
+
+/* UC04: ação indisponível para consultas finalizadas ou canceladas */
+.icon-btn.desabilitado {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}

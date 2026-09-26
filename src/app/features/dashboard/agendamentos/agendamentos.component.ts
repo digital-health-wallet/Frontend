@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { NovoAgendamentoComponent } from '../novo-agendamento/novo-agendamento.component';
 import { AuthService } from '@core/services/auth.service';
 import { PacienteService } from '@core/services/paciente.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-agendamentos',
@@ -37,6 +38,8 @@ export class AgendamentosComponent implements OnInit {
   private agendamentoService = inject(AgendamentoService);
   private authService = inject(AuthService);
   private pacienteService = inject(PacienteService);
+  private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
 
   private get ID_PACIENTE(): number {
     return this.pacienteService.getIdPacienteSelecionado()!;
@@ -138,25 +141,73 @@ toggleFiltroFavoritos() {
     .sort((a, b) => Number(b.favorito) - Number(a.favorito));
 });
 
-  onStatusChange(agendamento: AgendamentoResumo, novoStatus: StatusAgendamento): void {
-  console.log('chamado', agendamento.id, novoStatus);
-  this.agendamentoService.atualizarStatus(agendamento.id, novoStatus)
-    .subscribe({
-      next: (response) => {
-        this.agendamentos.update(lista =>
-          lista.map(item => item.id === agendamento.id
-            ? { ...item, status: response.status as StatusAgendamento }
-            : item
-          )
-        );
-      },
-      error: (err) => console.error('Erro:', err)
+  finalizada(agendamento: AgendamentoResumo): boolean {
+    return agendamento.status === 'FINALIZADO';
+  }
+
+  cancelada(agendamento: AgendamentoResumo): boolean {
+    return agendamento.status === 'CANCELADO';
+  }
+
+  /** UC04 - Fluxo Alternativo 1: o cancelamento exige confirmação do usuário. */
+  cancelarConsulta(agendamento: AgendamentoResumo): void {
+    this.confirmationService.confirm({
+      header: 'Cancelar consulta',
+      message: 'Deseja realmente cancelar esta consulta? O registro será mantido no histórico.',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim, cancelar',
+      rejectLabel: 'Voltar',
+      accept: () => this.aplicarStatus(agendamento, 'CANCELADO')
     });
-}
+  }
+
+  onStatusChange(agendamento: AgendamentoResumo, novoStatus: StatusAgendamento): void {
+    if (novoStatus === 'CANCELADO') {
+      this.cancelarConsulta(agendamento);
+      return;
+    }
+    this.aplicarStatus(agendamento, novoStatus);
+  }
+
+  private aplicarStatus(agendamento: AgendamentoResumo, novoStatus: StatusAgendamento): void {
+    this.agendamentoService.atualizarStatus(agendamento.id, novoStatus)
+      .subscribe({
+        next: (response) => {
+          this.agendamentos.update(lista =>
+            lista.map(item => item.id === agendamento.id
+              ? { ...item, status: response.status as StatusAgendamento }
+              : item
+            )
+          );
+        },
+        error: (err) => {
+          // Recarrega para desfazer a troca otimista feita pelo select.
+          this.carregarAgendamentos();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Não foi possível alterar o status',
+            detail: err?.error?.mensagem ?? 'Ocorreu um erro ao atualizar a consulta. Tente novamente.',
+            life: 6000
+          });
+        }
+      });
+  }
 
   arquivarSelecionados(): void {
     const selecionados = this.agendamentos().filter(ag => ag.selecionado);
     if (selecionados.length === 0) return;
+
+    // UC04 - Fluxo Alternativo 2: só consultas finalizadas ou canceladas são arquiváveis.
+    const naoArquivaveis = selecionados.filter(ag => !this.finalizada(ag) && !this.cancelada(ag));
+    if (naoArquivaveis.length > 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Consulta em aberto',
+        detail: 'Só é possível arquivar consultas finalizadas ou canceladas.',
+        life: 6000
+      });
+      return;
+    }
 
     selecionados.forEach(ag => {
       this.agendamentoService.arquivar(ag.id).subscribe(() => {
