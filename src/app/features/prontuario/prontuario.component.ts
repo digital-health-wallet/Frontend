@@ -6,6 +6,7 @@ import { CadastroProntuarioRequest } from '../../core/models';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -29,7 +30,8 @@ export class ProntuarioComponent implements OnInit {
     private fb: FormBuilder,
     private pacienteService: PacienteService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -114,6 +116,12 @@ export class ProntuarioComponent implements OnInit {
     this.prontuarioForm.get('fichaEmergencialAtiva')?.setValue(!current);
   }
 
+  /** Campo obrigatório não preenchido e já tocado pelo usuário (UC02 - destaque em vermelho). */
+  campoInvalido(campo: string): boolean {
+    const controle = this.prontuarioForm.get(campo);
+    return !!controle && controle.invalid && controle.touched;
+  }
+
   salvar(): void {
     if (this.prontuarioForm.invalid) {
       this.prontuarioForm.markAllAsTouched();
@@ -146,8 +154,11 @@ export class ProntuarioComponent implements OnInit {
         this.exibirModalQrCode = true;
       },
       error: (err) => {
-        console.error('Erro ao salvar prontuário:', err);
-        alert('Erro ao salvar os dados. Verifique o console.');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro ao salvar',
+          detail: err?.error?.mensagem ?? 'Não foi possível salvar o prontuário. Tente novamente.'
+        });
       }
     });
   }
@@ -182,12 +193,12 @@ export class ProntuarioComponent implements OnInit {
       pdf.addImage(qrBase64, 'PNG', 20, 50, 80, 80);
       pdf.save('ficha-emergencia.pdf');
 
-      alert('PDF salvo com sucesso!');
+      this.messageService.add({ severity: 'success', summary: 'PDF gerado', detail: 'O arquivo foi salvo no seu dispositivo.' });
       this.exibirModalQrCode = false;
       this.router.navigate(['/agendamentos']);
     } catch (err) {
       console.error('Erro ao gerar PDF:', err);
-      alert('Erro ao gerar o PDF. Tente novamente.');
+      this.messageService.add({ severity: 'error', summary: 'Erro ao gerar PDF', detail: 'Não foi possível gerar o arquivo. Tente novamente.' });
     } finally {
       this.baixandoPdf = false;
     }

@@ -341,3 +341,70 @@ input, select, textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+
+/* ---- Validação de formulário (UC02 - campos obrigatórios destacados) ---- */
+.campo-invalido,
+.campo-invalido .p-inputtext,
+.campo-invalido .p-select,
+.campo-invalido .p-datepicker-input {
+  border-color: #d93025 !important;
+
+  &:focus {
+    border-color: #d93025 !important;
+    box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.12) !important;
+  }
+}
+
+.mensagem-erro {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--font-size-sm);
+  color: #d93025;
+}
+
+
+/* ---- Lista de itens repetíveis (medicamentos de uso contínuo e itens de receita) ---- */
+.campo-com-acao {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  .input-field { flex: 1; }
+}
+
+.btn-remover-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.08);
+  }
+}
+
+.link-adicionar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+}

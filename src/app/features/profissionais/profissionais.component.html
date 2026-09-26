@@ -51,13 +51,21 @@
 
   <fieldset class="form-grid-modal" [disabled]="somenteVisualizacao()">
     <div class="form-group full-width">
-      <label class="label">Nome do Profissional</label>
-      <input class="input-field" placeholder="Ex: Dr. Silva" [(ngModel)]="form.nomeProfissional" />
+      <label class="label">Nome do Profissional *</label>
+      <input class="input-field" placeholder="Ex: Dr. Silva" [(ngModel)]="form.nomeProfissional"
+             [class.campo-invalido]="submetido() && !form.nomeProfissional" />
+      @if (submetido() && !form.nomeProfissional) {
+        <small class="mensagem-erro">Informe o nome do profissional.</small>
+      }
     </div>
 
     <div class="form-group">
-      <label class="label">Especialidade</label>
-      <input class="input-field" placeholder="Ex: Cardiologista" [(ngModel)]="form.especialidade" />
+      <label class="label">Especialidade *</label>
+      <input class="input-field" placeholder="Ex: Cardiologista" [(ngModel)]="form.especialidade"
+             [class.campo-invalido]="submetido() && !form.especialidade" />
+      @if (submetido() && !form.especialidade) {
+        <small class="mensagem-erro">Informe a especialidade.</small>
+      }
     </div>
 
     <div class="form-group">

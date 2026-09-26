@@ -9,13 +9,21 @@
       <h2 class="form-title-custom">Meu Prontuário</h2>
 
       <div class="form-group">
-        <label class="label">Nome</label>
-        <input type="text" class="input-field" formControlName="nome" placeholder="Digite o nome completo" />
+        <label class="label">Nome *</label>
+        <input type="text" class="input-field" formControlName="nome" placeholder="Digite o nome completo"
+               [class.campo-invalido]="campoInvalido('nome')" />
+        @if (campoInvalido('nome')) {
+          <small class="mensagem-erro">Informe o nome completo.</small>
+        }
       </div>
 
       <div class="form-group">
-        <label class="label">Data Nascimento</label>
-        <input type="date" class="input-field" formControlName="dataNascimento" />
+        <label class="label">Data Nascimento *</label>
+        <input type="date" class="input-field" formControlName="dataNascimento"
+               [class.campo-invalido]="campoInvalido('dataNascimento')" />
+        @if (campoInvalido('dataNascimento')) {
+          <small class="mensagem-erro">Informe a data de nascimento.</small>
+        }
       </div>
 
       <div class="form-group">
@@ -86,11 +94,15 @@
       </div>
 
       <div class="form-group">
-        <label class="label">Tipo Sanguíneo</label>
-        <select class="select-field" formControlName="tipoSanguineo">
+        <label class="label">Tipo Sanguíneo *</label>
+        <select class="select-field" formControlName="tipoSanguineo"
+                [class.campo-invalido]="campoInvalido('tipoSanguineo')">
           <option value="" disabled selected>Selecione o tipo sanguíneo</option>
           <option *ngFor="let tipo of tiposSanguineos" [value]="tipo">{{ tipo }}</option>
         </select>
+        @if (campoInvalido('tipoSanguineo')) {
+          <small class="mensagem-erro">Selecione o tipo sanguíneo.</small>
+        }
       </div>
 
       <div class="toggle-container" (click)="toggleFichaEmergencia()">

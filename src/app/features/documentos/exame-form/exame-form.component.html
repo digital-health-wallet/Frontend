@@ -17,13 +17,21 @@
   </div>
 
   <div class="form-group">
-    <label class="label">Nome do Exame</label>
-    <input type="text" class="input-field" placeholder="Hemograma Completo" [(ngModel)]="nomeExame" />
+    <label class="label">Nome do Exame *</label>
+    <input type="text" class="input-field" placeholder="Hemograma Completo" [(ngModel)]="nomeExame"
+           [class.campo-invalido]="submetido && !nomeExame" />
+    @if (submetido && !nomeExame) {
+      <small class="mensagem-erro">Informe o nome do exame.</small>
+    }
   </div>
 
   <div class="form-group">
-    <label class="label">Data do exame</label>
-    <input type="date" class="input-field" [(ngModel)]="dataExame" />
+    <label class="label">Data do exame *</label>
+    <input type="date" class="input-field" [(ngModel)]="dataExame"
+           [class.campo-invalido]="submetido && !dataExame" />
+    @if (submetido && !dataExame) {
+      <small class="mensagem-erro">Informe a data do exame.</small>
+    }
   </div>
 
   <div class="form-group">

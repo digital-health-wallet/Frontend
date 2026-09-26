@@ -2,8 +2,12 @@
   <h2 class="form-title">{{ diagnosticoParaEditar ? 'Editar Diagnóstico' : 'Diagnóstico' }}</h2>
   
   <div class="form-group">
-    <label class="label">Nome do Diagnóstico</label>
-    <input type="text" class="input-field" placeholder="Ex: Hipertensão Arterial" [(ngModel)]="nome" />
+    <label class="label">Nome do Diagnóstico *</label>
+    <input type="text" class="input-field" placeholder="Ex: Hipertensão Arterial" [(ngModel)]="nome"
+           [class.campo-invalido]="submetido && !nome" />
+    @if (submetido && !nome) {
+      <small class="mensagem-erro">Informe o nome do diagnóstico.</small>
+    }
   </div>
 
   <div class="form-group">

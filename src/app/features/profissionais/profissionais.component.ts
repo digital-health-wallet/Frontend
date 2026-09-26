@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Profissional } from '@core/models';
 import { ProfissionalService } from '@core/services/profissional.service';
-import { ViaCep } from '@core/services/viacep.service'; 
+import { ViaCep } from '@core/services/viacep.service';
+import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 
@@ -16,11 +17,13 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ProfissionaisComponent implements OnInit {
   private profissionalService = inject(ProfissionalService);
-  private viaCepService = inject(ViaCep); 
+  private viaCepService = inject(ViaCep);
+  private messageService = inject(MessageService);
 
   profissionais = signal<Profissional[]>([]);
   exibirFormulario = signal(false);
   somenteVisualizacao = signal(false);
+  submetido = signal(false);
 
   form: any = {
     id: null,
@@ -55,20 +58,24 @@ export class ProfissionaisComponent implements OnInit {
     if (cep?.length === 8) {
       this.viaCepService.buscarCep(cep).subscribe({
         next: (dados) => {
-          if (!dados.erro) {
-            this.form.logradouro = dados.logradouro;
-            this.form.bairro = dados.bairro;
-            this.form.cidade = dados.localidade;
-            this.form.estado = dados.uf;
+          if (dados.erro) {
+            this.avisarPreenchimentoManual();
+            return;
           }
+          this.form.logradouro = dados.logradouro;
+          this.form.bairro = dados.bairro;
+          this.form.cidade = dados.localidade;
+          this.form.estado = dados.uf;
         },
-        error: (err) => console.error('Erro ao buscar CEP', err)
+        // UC02 - Fluxo Alternativo: sem resposta do ViaCEP o endereço é digitado à mão.
+        error: () => this.avisarPreenchimentoManual()
       });
     }
   }
 
   abrirFormulario(profissional?: any, somenteVisualizacao = false): void {
     this.somenteVisualizacao.set(somenteVisualizacao);
+    this.submetido.set(false);
     if (profissional) {
       this.form = {
         id: profissional.id,
@@ -94,6 +101,7 @@ export class ProfissionaisComponent implements OnInit {
   }
 
   fecharFormulario(): void {
+    this.submetido.set(false);
     this.exibirFormulario.set(false);
   }
 
@@ -101,7 +109,26 @@ export class ProfissionaisComponent implements OnInit {
     this.somenteVisualizacao.set(false);
   }
 
+  private avisarPreenchimentoManual(): void {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'CEP não encontrado',
+      detail: 'Preencha o logradouro e o bairro manualmente.'
+    });
+  }
+
   salvarProfissional(): void {
+    this.submetido.set(true);
+
+    if (!this.form.nomeProfissional || !this.form.especialidade) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campos obrigatórios',
+        detail: 'Informe o nome do profissional e a especialidade.'
+      });
+      return;
+    }
+
     const payload = {
       id: this.form.id, 
       nomeProfissional: this.form.nomeProfissional,
@@ -127,8 +154,11 @@ export class ProfissionaisComponent implements OnInit {
         this.fecharFormulario(); 
       },
       error: (erro) => {
-        console.error('Erro ao salvar:', erro);
-        alert('Erro ao salvar profissional. Verifique o console do backend.');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro ao salvar',
+          detail: erro?.error?.mensagem ?? 'Não foi possível salvar o profissional. Tente novamente.'
+        });
       }
     });
   }

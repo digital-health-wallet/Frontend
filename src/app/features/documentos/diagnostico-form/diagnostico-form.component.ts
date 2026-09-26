@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, inject, OnChanges } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 import { DocumentosService } from '../../../core/services/documentos.service';
 import { PacienteService } from '../../../core/services/paciente.service';
 import { Diagnostico } from '../../../core/models';
@@ -19,6 +20,7 @@ export class DiagnosticoFormComponent implements OnChanges {
   @Output() aoSalvar = new EventEmitter<void>();
 
   private documentosService = inject(DocumentosService);
+  private messageService = inject(MessageService);
   private pacienteService = inject(PacienteService);
 
   nome = '';
@@ -26,6 +28,7 @@ export class DiagnosticoFormComponent implements OnChanges {
   descricao = '';
   doencaCronica = false;
   carregando = false;
+  submetido = false;
 
   ngOnChanges(): void {
     if (this.diagnosticoParaEditar) {
@@ -37,8 +40,14 @@ export class DiagnosticoFormComponent implements OnChanges {
   }
 
   salvar(): void {
+    this.submetido = true;
+
     if (!this.nome) {
-      alert('O nome do diagnóstico é obrigatório!');
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campo obrigatório',
+        detail: 'Informe o nome do diagnóstico.'
+      });
       return;
     }
 
@@ -60,6 +69,7 @@ export class DiagnosticoFormComponent implements OnChanges {
     operacao.subscribe({
       next: () => {
         this.carregando = false;
+        this.submetido = false;
 
         this.nome = '';
         this.cid = '';
@@ -70,7 +80,11 @@ export class DiagnosticoFormComponent implements OnChanges {
       },
       error: (erro) => {
         console.error('Erro ao salvar diagnóstico:', erro);
-        alert('Erro ao salvar. Verifique o console.');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro ao salvar',
+          detail: erro?.error?.mensagem ?? 'Não foi possível salvar o diagnóstico. Tente novamente.'
+        });
         this.carregando = false;
       }
     });

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, inject, OnChanges } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 import { DocumentosService } from '../../../core/services/documentos.service';
 import { PacienteService } from '../../../core/services/paciente.service';
 import { Exame } from '../../../core/models';
@@ -20,12 +21,14 @@ export class ExameFormComponent implements OnChanges {
   @Output() aoSalvar = new EventEmitter<void>();
 
   private documentosService = inject(DocumentosService);
+  private messageService = inject(MessageService);
   private pacienteService = inject(PacienteService);
 
   nomeExame = '';
   dataExame = '';
   observacoes = '';
   carregando = false;
+  submetido = false;
 
   arquivoBase64: string | null = null;
   nomeArquivo = '';
@@ -39,8 +42,14 @@ export class ExameFormComponent implements OnChanges {
   }
 
   salvar(): void {
+    this.submetido = true;
+
     if (!this.nomeExame || !this.dataExame) {
-      alert('Preencha o nome e a data do exame!');
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campos obrigatórios',
+        detail: 'Informe o nome e a data do exame.'
+      });
       return;
     }
 
@@ -64,6 +73,7 @@ export class ExameFormComponent implements OnChanges {
     operacao.subscribe({
       next: () => {
         this.carregando = false;
+        this.submetido = false;
 
         this.nomeExame = '';
         this.dataExame = '';
@@ -73,7 +83,11 @@ export class ExameFormComponent implements OnChanges {
       },
       error: (erro) => {
         console.error('Erro ao salvar exame:', erro);
-        alert('Erro ao salvar o exame. Verifique o console.');
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro ao salvar',
+          detail: erro?.error?.mensagem ?? 'Não foi possível salvar o exame. Tente novamente.'
+        });
         this.carregando = false;
       }
     });
