@@ -42,20 +42,35 @@
         </div>
       </div>
 
-      <div *ngIf="form.get('possuiAlergia')?.value" class="animated-fade">
-        <div class="form-group">
-          <label class="label">Tipo de Alergia</label>
-          <select class="select-field" formControlName="tipoAlergia">
-            <option value="" disabled selected>Selecione o tipo</option>
-            <option value="M">Medicamentosa</option>
-            <option value="A">Alimentar</option>
-          </select>
-        </div>
+      <div *ngIf="form.get('possuiAlergia')?.value" class="animated-fade" formArrayName="alergias">
+        @for (alergiaGroup of alergias.controls; track $index) {
+          <div [formGroupName]="$index">
+            <div class="form-group">
+              <label class="label">Tipo de Alergia</label>
+              <select class="select-field" formControlName="tipo">
+                <option value="" disabled selected>Selecione o tipo</option>
+                <option value="M">Medicamentosa</option>
+                <option value="A">Alimentar</option>
+              </select>
+            </div>
 
-        <div class="form-group">
-          <label class="label">Descrição</label>
-          <input type="text" class="input-field" formControlName="descricaoAlergia" placeholder="Ex: Alérgica a ovo, dipirona" />
-        </div>
+            <div class="form-group">
+              <label class="label">Descrição</label>
+              <div class="campo-com-acao">
+                <input type="text" class="input-field" formControlName="descricao" placeholder="Ex: Alérgica a ovo, dipirona" />
+                @if (alergias.length > 1) {
+                  <button type="button" class="btn-remover-inline" title="Remover alergia" (click)="removerAlergia($index)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <button type="button" class="link-adicionar" (click)="adicionarAlergia()">
+          <i class="pi pi-plus"></i> Adicionar outra alergia
+        </button>
       </div>
 
       <div class="resumo-clinico" *ngIf="diagnosticosCronicos().length > 0 || medicamentosUsoContinuo().length > 0">

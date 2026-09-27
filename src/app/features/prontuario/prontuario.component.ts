@@ -51,8 +51,7 @@ export class ProntuarioComponent implements OnInit {
       cpf: [''],
       dataNascimento: ['', [Validators.required]],
       possuiAlergia: [false, [Validators.required]],
-      tipoAlergia: [{ value: '', disabled: true }], 
-      descricaoAlergia: [{ value: '', disabled: true }],
+      alergias: this.fb.array([]),
       tipoSanguineo: ['', [Validators.required]],
       fichaEmergencialAtiva: [true],
       usaMedicamentoContinuo: [false],
@@ -62,6 +61,26 @@ export class ProntuarioComponent implements OnInit {
 
   get medicamentosContinuos(): FormArray {
     return this.prontuarioForm.get('medicamentosContinuos') as FormArray;
+  }
+
+  get alergias(): FormArray {
+    return this.prontuarioForm.get('alergias') as FormArray;
+  }
+
+  private novaAlergiaGroup(): FormGroup {
+    return this.fb.group({
+      id: [null],
+      tipo: ['', [Validators.required]],
+      descricao: ['', [Validators.required]]
+    });
+  }
+
+  adicionarAlergia(): void {
+    this.alergias.push(this.novaAlergiaGroup());
+  }
+
+  removerAlergia(index: number): void {
+    this.alergias.removeAt(index);
   }
 
   private novoMedicamentoGroup(): FormGroup {
@@ -81,21 +100,13 @@ export class ProntuarioComponent implements OnInit {
 
   private watchAlergiaChanges(): void {
     this.prontuarioForm.get('possuiAlergia')?.valueChanges.subscribe((possui: boolean) => {
-      const tipoCtrl = this.prontuarioForm.get('tipoAlergia');
-      const descCtrl = this.prontuarioForm.get('descricaoAlergia');
-
       if (possui) {
-        tipoCtrl?.enable();
-        descCtrl?.enable();
-        tipoCtrl?.setValidators([Validators.required]);
+        if (this.alergias.length === 0) {
+          this.adicionarAlergia();
+        }
       } else {
-        tipoCtrl?.disable();
-        descCtrl?.disable();
-        tipoCtrl?.clearValidators();
-        tipoCtrl?.setValue('');
-        descCtrl?.setValue('');
+        this.alergias.clear();
       }
-      tipoCtrl?.updateValueAndValidity();
     });
   }
 
@@ -136,8 +147,7 @@ export class ProntuarioComponent implements OnInit {
       tipoSanguineo: formValue.tipoSanguineo,
       fichaEmergencialAtiva: formValue.fichaEmergencialAtiva,
       possuiAlergia: formValue.possuiAlergia,
-      tipoAlergia: formValue.possuiAlergia ? formValue.tipoAlergia : undefined,
-      descricaoAlergia: formValue.possuiAlergia ? formValue.descricaoAlergia : undefined,
+      alergias: formValue.possuiAlergia ? formValue.alergias : [],
       usaMedicamentoContinuo: formValue.usaMedicamentoContinuo,
       medicamentosContinuos: formValue.usaMedicamentoContinuo ? formValue.medicamentosContinuos : undefined
     };

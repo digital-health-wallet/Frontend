@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { PacienteService } from '@core/services/paciente.service';
 import { PacienteUpdateRequest, MedicamentoContinuoRequest, PacienteResponse } from '@core/models';
@@ -59,9 +59,28 @@ export class GerenciarPacienteComponent implements OnInit {
       tipoSanguineo: ['', [Validators.required]],
       fichaEmergencialAtiva: [true],
       possuiAlergia: [false],
-      tipoAlergia: [{ value: '', disabled: true }],
-      descricaoAlergia: [{ value: '', disabled: true }]
+      alergias: this.fb.array([])
     });
+  }
+
+  get alergias(): FormArray {
+    return this.form.get('alergias') as FormArray;
+  }
+
+  private novaAlergiaGroup(id: number | null = null, tipo = '', descricao = ''): FormGroup {
+    return this.fb.group({
+      id: [id],
+      tipo: [tipo, [Validators.required]],
+      descricao: [descricao, [Validators.required]]
+    });
+  }
+
+  adicionarAlergia(): void {
+    this.alergias.push(this.novaAlergiaGroup());
+  }
+
+  removerAlergia(index: number): void {
+    this.alergias.removeAt(index);
   }
 
   adicionarLinhaMedicamento(): void {
@@ -77,17 +96,24 @@ export class GerenciarPacienteComponent implements OnInit {
 
   private watchAlergiaChanges(): void {
     this.form.get('possuiAlergia')?.valueChanges.subscribe((possui: boolean) => {
-      const tipoCtrl = this.form.get('tipoAlergia');
-      const descCtrl = this.form.get('descricaoAlergia');
-
       if (possui) {
-        tipoCtrl?.enable();
-        descCtrl?.enable();
+        if (this.alergias.length === 0) {
+          this.adicionarAlergia();
+        }
       } else {
-        tipoCtrl?.disable();
-        descCtrl?.disable();
+        this.alergias.clear();
       }
     });
+  }
+
+  /** Recarrega a lista de alergias a partir do que o servidor devolveu. */
+  private preencherAlergias(paciente: PacienteResponse): void {
+    this.alergias.clear();
+    (paciente.alergias ?? []).forEach(a =>
+      this.alergias.push(this.novaAlergiaGroup(a.id ?? null, a.tipo ?? '', a.descricao)));
+    if (paciente.possuiAlergia && this.alergias.length === 0) {
+      this.adicionarAlergia();
+    }
   }
 
   private carregarPaciente(id: number): void {
@@ -99,10 +125,9 @@ export class GerenciarPacienteComponent implements OnInit {
           dataNascimento: paciente.dataNascimento,
           tipoSanguineo: paciente.tipoSanguineo,
           fichaEmergencialAtiva: paciente.fichaEmergencialAtiva,
-          possuiAlergia: paciente.possuiAlergia,
-          tipoAlergia: paciente.tipoAlergia ?? '',
-          descricaoAlergia: paciente.descricaoAlergia ?? ''
+          possuiAlergia: paciente.possuiAlergia
         });
+        this.preencherAlergias(paciente);
         this.possuiAlergiaOriginal = paciente.possuiAlergia;
         this.nomePaciente = paciente.nome;
         this.codigoEmergencia.set(paciente.codigoEmergencia ?? null);
@@ -196,8 +221,7 @@ export class GerenciarPacienteComponent implements OnInit {
       tipoSanguineo: valores.tipoSanguineo,
       fichaEmergencialAtiva: valores.fichaEmergencialAtiva,
       possuiAlergia: valores.possuiAlergia,
-      tipoAlergia: valores.possuiAlergia ? valores.tipoAlergia : undefined,
-      descricaoAlergia: valores.possuiAlergia ? valores.descricaoAlergia : undefined
+      alergias: valores.possuiAlergia ? valores.alergias : []
     };
 
     this.carregando.set(true);
@@ -239,6 +263,7 @@ export class GerenciarPacienteComponent implements OnInit {
     this.diagnosticosCronicos.set(paciente.diagnosticosCronicos ?? []);
     this.medicamentosUsoContinuo.set(paciente.medicamentosUsoContinuo ?? []);
     this.possuiAlergiaOriginal = paciente.possuiAlergia;
+    this.preencherAlergias(paciente);
   }
 
   private finalizarSalvamento(): void {

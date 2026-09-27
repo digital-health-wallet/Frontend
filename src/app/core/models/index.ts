@@ -62,8 +62,7 @@ export interface PacienteResponse {
   ativo: boolean;
   codigoEmergencia?: string;
   possuiAlergia: boolean;
-  tipoAlergia?: TipoAlergia;
-  descricaoAlergia?: string;
+  alergias: AlergiaResumo[];
   diagnosticosCronicos: { nome: string; cid?: string; descricao?: string }[];
   medicamentosUsoContinuo: { nomeMedicamento: string; posologia: string }[];
 }
@@ -131,6 +130,13 @@ export interface ItemReceita {
 
 export type TipoAlergia = 'M' | 'A';
 
+/** RF10 - uma alergia do histórico do paciente. */
+export interface AlergiaResumo {
+  id?: number;
+  tipo?: TipoAlergia;
+  descricao: string;
+}
+
 export interface Alergia {
   id?: number;
   paciente?: Paciente;
@@ -175,8 +181,7 @@ export interface CadastroProntuarioRequest {
   tipoSanguineo: string;
   fichaEmergencialAtiva: boolean;
   possuiAlergia: boolean;
-  tipoAlergia?: TipoAlergia;
-  descricaoAlergia?: string;
+  alergias?: AlergiaResumo[];
   usaMedicamentoContinuo?: boolean;
   medicamentosContinuos?: MedicamentoContinuoRequest[];
 }
@@ -188,6 +193,5 @@ export interface PacienteUpdateRequest {
   tipoSanguineo: string;
   fichaEmergencialAtiva: boolean;
   possuiAlergia: boolean;
-  tipoAlergia?: TipoAlergia;
-  descricaoAlergia?: string;
+  alergias?: AlergiaResumo[];
 }
