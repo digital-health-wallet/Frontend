@@ -119,9 +119,11 @@ toggleFiltroFavoritos() {
   this.filtroFavoritos.update(v => !v);
 }
 
-  opcoesStatus: { label: string, value: StatusAgendamento }[] = [
+  // "Reagendada" fica na lista para o selo conseguir exibir o rótulo, mas não é
+  // escolhível: quem define esse status é o próprio reagendamento da consulta.
+  opcoesStatus: { label: string, value: StatusAgendamento, bloqueado?: boolean }[] = [
     { label: 'Confirmada', value: 'CONFIRMADO' },
-    { label: 'Reagendada', value: 'REAGENDADO' },
+    { label: 'Reagendada', value: 'REAGENDADO', bloqueado: true },
     { label: 'Em andamento', value: 'AGENDADO' },
     { label: 'Finalizada', value: 'FINALIZADO' },
     { label: 'Cancelada', value: 'CANCELADO' }
@@ -213,9 +215,17 @@ toggleFiltroFavoritos() {
     }
 
     selecionados.forEach(ag => {
-      this.agendamentoService.arquivar(ag.id).subscribe(() => {
-        this.agendamentos.update(lista => lista.filter(item => item.id !== ag.id));
-        this.agendamentosArquivadosSignal.update(lista => [...lista, { ...ag, selecionado: false }]);
+      this.agendamentoService.arquivar(ag.id).subscribe({
+        next: () => {
+          this.agendamentos.update(lista => lista.filter(item => item.id !== ag.id));
+          this.agendamentosArquivadosSignal.update(lista => [...lista, { ...ag, selecionado: false }]);
+        },
+        error: (err) => this.messageService.add({
+          severity: 'error',
+          summary: 'Não foi possível arquivar',
+          detail: err?.error?.mensagem ?? 'Ocorreu um erro ao arquivar a consulta.',
+          life: 6000
+        })
       });
     });
   }
