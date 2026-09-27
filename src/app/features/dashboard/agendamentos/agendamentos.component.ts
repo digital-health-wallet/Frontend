@@ -67,6 +67,7 @@ export class AgendamentosComponent implements OnInit {
 
   filtroStatus = signal<Record<string, boolean>>({
   CONFIRMADO: false,
+  REAGENDADO: false,
   AGENDADO: false,
   FINALIZADO: false,
   CANCELADO: false
@@ -93,7 +94,7 @@ export class AgendamentosComponent implements OnInit {
   }
 
   limparFiltros() {
-  this.filtroStatus.set({ CONFIRMADO: false, AGENDADO: false, FINALIZADO: false, CANCELADO: false });
+  this.filtroStatus.set({ CONFIRMADO: false, AGENDADO: false, REAGENDADO: false, FINALIZADO: false, CANCELADO: false });
   this.filtroFavoritos.set(false);
 }
 
@@ -102,6 +103,7 @@ getStatusClassById(id: number): string {
   const status = ag?.status ?? 'AGENDADO';
   const map: Record<string, string> = {
     CONFIRMADO: 'confirmada',
+    REAGENDADO: 'reagendada',
     AGENDADO: 'andamento',
     FINALIZADO: 'finalizada',
     CANCELADO: 'cancelada'
@@ -119,6 +121,7 @@ toggleFiltroFavoritos() {
 
   opcoesStatus: { label: string, value: StatusAgendamento }[] = [
     { label: 'Confirmada', value: 'CONFIRMADO' },
+    { label: 'Reagendada', value: 'REAGENDADO' },
     { label: 'Em andamento', value: 'AGENDADO' },
     { label: 'Finalizada', value: 'FINALIZADO' },
     { label: 'Cancelada', value: 'CANCELADO' }
@@ -240,7 +243,7 @@ toggleFiltroFavoritos() {
   }
 
   getStatusClass(status: StatusAgendamento): string {
-    const map: Record<StatusAgendamento, string> = { CONFIRMADO: 'confirmada', AGENDADO: 'andamento', FINALIZADO: 'finalizada', CANCELADO: 'cancelada' };
+    const map: Record<StatusAgendamento, string> = { CONFIRMADO: 'confirmada', AGENDADO: 'andamento', REAGENDADO: 'reagendada', FINALIZADO: 'finalizada', CANCELADO: 'cancelada' };
     return map[status];
   }
 
