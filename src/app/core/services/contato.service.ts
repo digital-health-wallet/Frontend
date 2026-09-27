@@ -20,8 +20,4 @@ export class ContatoService {
       return this.http.post<Contato>(this.apiUrl, contato);
     }
   }
-
-  deletar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
 }
