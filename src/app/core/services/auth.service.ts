@@ -56,6 +56,11 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('sessao');
     localStorage.removeItem('idPaciente');
+    try {
+      sessionStorage.removeItem('bannerGoogleDispensado');
+    } catch {
+      // Sem armazenamento de sessão não há o que limpar.
+    }
     this.router.navigate(['/login']);
   }
 

@@ -46,7 +46,18 @@ export class AgendamentosComponent implements OnInit {
   }
 
   googleDesconectado = signal(false);
-  bannerGoogleDispensado = signal(false);
+
+  // A dispensa vale enquanto a aba estiver aberta: sem isso o aviso reaparecia a
+  // cada volta para a tela, já que o componente é recriado a cada navegação.
+  bannerGoogleDispensado = signal(AgendamentosComponent.leuDispensa());
+
+  private static leuDispensa(): boolean {
+    try {
+      return sessionStorage.getItem('bannerGoogleDispensado') === 'true';
+    } catch {
+      return false;
+    }
+  }
 
   ngOnInit() {
     this.carregarAgendamentos();
@@ -59,6 +70,12 @@ export class AgendamentosComponent implements OnInit {
 
   dispensarBannerGoogle(): void {
     this.bannerGoogleDispensado.set(true);
+    try {
+      sessionStorage.setItem('bannerGoogleDispensado', 'true');
+    } catch {
+      // Armazenamento indisponível (janela anônima, por exemplo): o aviso volta
+      // na próxima navegação, mas a tela continua funcionando.
+    }
   }
 
   @ViewChild('filtroPopover') filtroPopover!: Popover;
