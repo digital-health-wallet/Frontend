@@ -136,11 +136,9 @@ toggleFiltroFavoritos() {
   this.filtroFavoritos.update(v => !v);
 }
 
-  // "Reagendada" fica na lista para o selo conseguir exibir o rótulo, mas não é
-  // escolhível: quem define esse status é o próprio reagendamento da consulta.
-  opcoesStatus: { label: string, value: StatusAgendamento, bloqueado?: boolean }[] = [
+  opcoesStatus: { label: string, value: StatusAgendamento }[] = [
     { label: 'Confirmada', value: 'CONFIRMADO' },
-    { label: 'Reagendada', value: 'REAGENDADO', bloqueado: true },
+    { label: 'Reagendada', value: 'REAGENDADO' },
     { label: 'Em andamento', value: 'AGENDADO' },
     { label: 'Finalizada', value: 'FINALIZADO' },
     { label: 'Cancelada', value: 'CANCELADO' }
