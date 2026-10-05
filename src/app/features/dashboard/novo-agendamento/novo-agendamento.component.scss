@@ -8,8 +8,12 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   max-width: 800px;
-  max-height: 90vh;
   margin: 0 auto;
+
+  // Sem altura máxima própria: quem rola é o contêiner de quem exibe o formulário
+  // (o conteúdo do diálogo, ou a própria página na rota /agendamentos/novo).
+  // Impor 90vh aqui dentro do diálogo somava duas restrições e jogava o rodapé
+  // para fora do card.
 
   @media (max-width: 768px) {
     padding: var(--spacing-md);
