@@ -183,7 +183,6 @@ export class GerenciarPacienteComponent implements OnInit {
 
       this.messageService.add({ severity: 'success', summary: 'PDF gerado', detail: 'O arquivo foi salvo no seu dispositivo.' });
       this.exibirModalQrCode.set(false);
-      this.router.navigate(['/agendamentos']);
     } catch (err) {
       console.error('Erro ao gerar PDF:', err);
       this.messageService.add({ severity: 'error', summary: 'Erro ao gerar PDF', detail: 'Não foi possível gerar o arquivo. Tente novamente.' });

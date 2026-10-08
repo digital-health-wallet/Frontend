@@ -141,6 +141,14 @@
         <div *ngIf="qrCodeUrl; else semCodigo" class="qr-code-active">
           <img [src]="qrCodeUrl" alt="QR Code de Emergência" class="real-qr-img" />
           <a [routerLink]="linkFicha" target="_blank" class="qr-link">Acessar Ficha</a>
+          <p-button
+            [label]="baixandoPdf() ? 'Gerando PDF...' : 'Baixar PDF'"
+            [icon]="baixandoPdf() ? 'pi pi-spinner pi-spin' : 'pi pi-download'"
+            [disabled]="baixandoPdf()"
+            size="small"
+            severity="secondary"
+            styleClass="qr-baixar"
+            (onClick)="baixarPdf()" />
           <p class="qr-hint">
             Qualquer pessoa que escanear este código vê os dados vitais de emergência do paciente,
             sem precisar entrar na conta. Vale imprimir e levar com o paciente.
