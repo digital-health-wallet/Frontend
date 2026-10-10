@@ -8,6 +8,7 @@ import { PacienteService } from '@core/services/paciente.service';
 import { PacienteUpdateRequest, MedicamentoContinuoRequest, PacienteResponse } from '@core/models';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { urlImagemQrCode, urlPublicaFicha } from '@core/url-ficha';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -144,12 +145,14 @@ export class GerenciarPacienteComponent implements OnInit {
   }
 
   get qrCodeUrl(): string | null {
-    const link = this.linkFicha;
-    if (!link) {
-      return null;
-    }
-    const urlCompleta = `${window.location.origin}${link}`;
-    return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(urlCompleta)}`;
+    const codigo = this.codigoEmergencia();
+    return codigo ? urlImagemQrCode(codigo) : null;
+  }
+
+  /** Endereço que o QR Code carrega — exibido para conferência ao lado do código. */
+  get urlFicha(): string | null {
+    const codigo = this.codigoEmergencia();
+    return codigo ? urlPublicaFicha(codigo) : null;
   }
 
   fecharModalQrCode(): void {

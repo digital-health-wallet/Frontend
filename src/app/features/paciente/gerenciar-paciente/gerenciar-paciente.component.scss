@@ -254,3 +254,13 @@
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+// Endereço que o QR Code carrega, logo abaixo da imagem: serve de conferência
+// rápida quando o código é lido por outro dispositivo.
+.qr-destino {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+  word-break: break-all;
+  text-align: center;
+}

@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
+import { urlPublicaFicha } from '../../core/url-ficha';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -160,7 +161,7 @@ export class ProntuarioComponent implements OnInit {
         this.pacienteService.atualizarNomeNaSidebar(pacienteSalvo.nome);
         this.nomePacienteSalvo = pacienteSalvo.nome;
         this.linkAcesso = `/emergencia/${pacienteSalvo.codigoEmergencia}`;
-        this.qrCodeData = `${window.location.origin}${this.linkAcesso}`;
+        this.qrCodeData = urlPublicaFicha(pacienteSalvo.codigoEmergencia!);
         this.exibirModalQrCode = true;
       },
       error: (err) => {
