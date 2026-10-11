@@ -15,7 +15,6 @@ import { Exame } from '../../../core/models';
   styleUrl: './exame-form.component.scss'
 })
 export class ExameFormComponent implements OnChanges {
-  // Opcional: pode ser nulo se for inserido direto na aba de Documentos Avulsos
   @Input() idAgendamento?: number | null = null;
   @Input() exameParaEditar: Exame | null = null;
   @Output() aoSalvar = new EventEmitter<void>();

@@ -67,7 +67,6 @@ export class ProfissionaisComponent implements OnInit {
           this.form.cidade = dados.localidade;
           this.form.estado = dados.uf;
         },
-        // UC02 - Fluxo Alternativo: sem resposta do ViaCEP o endereço é digitado à mão.
         error: () => this.avisarPreenchimentoManual()
       });
     }

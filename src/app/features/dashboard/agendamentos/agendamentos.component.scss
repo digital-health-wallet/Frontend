@@ -187,8 +187,6 @@
   text-decoration: none;
   cursor: pointer;
 
-  // A ação de cancelar é um <button> e as demais são links: sem isto o botão
-  // herda o fundo e a borda padrão do navegador e destoa dos vizinhos.
   background: none;
   border: none;
   padding: 0;
@@ -200,9 +198,6 @@
   }
 }
 
-/* =======================================================
-   1. O BOTÃO (Wrapper)
-   ======================================================= */
 .status-badge-wrapper {
   border-radius: var(--border-radius-full);
   display: inline-flex;
@@ -269,7 +264,6 @@
 }
 
 
-//Filtrar
 .filtro-panel {
   display: flex;
   flex-direction: column;
@@ -300,7 +294,6 @@
   label { cursor: pointer; }
 }
 
-//tabTggle
 .tab-toggle {
   display: inline-flex;
   background: var(--bg-card);
@@ -338,9 +331,6 @@
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
 }
-/* =========================================
-   RESPONSIVIDADE (CELULARES E TABLETS)
-   ========================================= */
 
 @media (max-width: 768px) {
   
@@ -382,8 +372,6 @@
   }
 }
 
-
-/* UC04: ação indisponível para consultas finalizadas ou canceladas */
 .icon-btn.desabilitado {
   opacity: 0.35;
   cursor: not-allowed;

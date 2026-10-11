@@ -107,7 +107,6 @@ export class GerenciarPacienteComponent implements OnInit {
     });
   }
 
-  /** Recarrega a lista de alergias a partir do que o servidor devolveu. */
   private preencherAlergias(paciente: PacienteResponse): void {
     this.alergias.clear();
     (paciente.alergias ?? []).forEach(a =>
@@ -149,7 +148,6 @@ export class GerenciarPacienteComponent implements OnInit {
     return codigo ? urlImagemQrCode(codigo) : null;
   }
 
-  /** Endereço que o QR Code carrega — exibido para conferência ao lado do código. */
   get urlFicha(): string | null {
     const codigo = this.codigoEmergencia();
     return codigo ? urlPublicaFicha(codigo) : null;

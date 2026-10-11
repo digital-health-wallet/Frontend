@@ -1,6 +1,4 @@
-// Configuração do Karma para execução dos testes unitários.
-// Em CI usa-se ChromeHeadless; localmente também é possível rodar com FirefoxHeadless
-// através de: ng test --browsers=FirefoxHeadless
+
 module.exports = function (config) {
   config.set({
     basePath: '',

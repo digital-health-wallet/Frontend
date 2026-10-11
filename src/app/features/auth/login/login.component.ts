@@ -67,10 +67,7 @@ export class LoginComponent {
     });
   }
 
-  /**
-   * UC01 - Fluxo Alternativo: gera um novo código. O backend invalida o anterior
-   * ao emitir o novo, então o código antigo deixa de funcionar.
-   */
+
   reenviarCodigo(): void {
     this.erro.set(null);
     this.aviso.set(null);

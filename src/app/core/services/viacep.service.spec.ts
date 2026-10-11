@@ -3,10 +3,6 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient } from '@angular/common/http';
 import { ViaCep } from './viacep.service';
 
-/**
- * UC02 - Teste previsto na especificação: quando o ViaCEP não responde, o erro é
- * propagado para que a tela libere o preenchimento manual do endereço.
- */
 describe('ViaCep', () => {
   let service: ViaCep;
   let http: HttpTestingController;

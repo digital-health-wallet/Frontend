@@ -152,7 +152,6 @@
   }
 }
 
-/* --- ELEMENTOS DO FORMULÁRIO --- */
 .input-field {
   width: 100%;
   padding: 8px 12px;
@@ -212,7 +211,7 @@
   &:active { transform: scale(0.98); }
 }
 
-/* --- RESPONSIVIDADE (CELULAR) --- */
+
 @media (max-width: 768px) {
   :host ::ng-deep {
     .p-dialog {

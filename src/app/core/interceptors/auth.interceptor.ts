@@ -13,8 +13,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((erro) => {
-      // Sessão inválida no backend (ex.: usuário não existe mais): força logout em vez de
-      // deixar a tela quebrada com dados de um usuário que não existe mais.
       if (token && (erro.status === 401 || erro.status === 403)) {
         authService.logout();
       }

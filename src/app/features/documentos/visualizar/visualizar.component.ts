@@ -94,7 +94,7 @@ export class VisualizarComponent implements OnInit {
     });
   }
 
-  // --- Exames ---
+
   editarExame(exame: Exame): void {
     this.exameEmEdicao.set(exame);
   }
@@ -125,7 +125,6 @@ export class VisualizarComponent implements OnInit {
     });
   }
 
-  // --- Receitas ---
   editarReceita(receita: Receita): void {
     this.receitaEmEdicao.set(receita);
   }
@@ -156,7 +155,6 @@ export class VisualizarComponent implements OnInit {
     });
   }
 
-  // --- Diagnósticos ---
   editarDiagnostico(diagnostico: Diagnostico): void {
     this.diagnosticoEmEdicao.set(diagnostico);
   }

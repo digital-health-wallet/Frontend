@@ -2,14 +2,12 @@
 
 
 :root {
-  /* ---- Cores Primárias ---- */
   --color-primary: #4285F4;
   --color-primary-hover: #3367D6;
   --color-primary-light: #89BCFF;
   --color-primary-lighter: #B8D4FF;
   --color-primary-rgb: 59, 130, 246;
 
-  /* ---- Cores de Background ---- */
   --bg-sidebar: #89BCFF;
   --bg-main: #F3FEFF;
   --bg-card: #FFFFFF;
@@ -21,14 +19,12 @@
 
   --status-cancelada: #FF3B30;
 
-  /* ---- Cores de Texto ---- */
   --text-primary: #1A1A2E;
   --text-secondary: #6B7280;
   --text-muted: #9CA3AF;
   --text-white: #FFFFFF;
   --text-link: #4285F4;
 
-  /* ---- Bordas ---- */
   --border-color: #E5E7EB;
   --border-radius-sm: 8px;
   --border-radius-md: 12px;
@@ -36,13 +32,13 @@
   --border-radius-xl: 20px;
   --border-radius-full: 9999px;
 
-  /* ---- Sombras ---- */
+
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-  /* ---- Tipografia ---- */
+
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 1.2rem;
@@ -52,7 +48,6 @@
   --font-size-2xl: 1.5rem;
   --font-size-3xl: 1.875rem;
 
-  /* ---- Espaçamentos ---- */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
@@ -60,18 +55,15 @@
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
 
-  /* ---- Layout ---- */
   --sidebar-width: 300px;
   --sidebar-collapsed: 64px;
   --header-height: 64px;
 
-  /* ---- Transições ---- */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 400ms ease;
 }
 
-/* ---- Reset & Base ---- */
 *,
 *::before,
 *::after {
@@ -117,7 +109,6 @@ input, select, textarea {
   outline: none;
 }
 
-/* ---- Utility Classes ---- */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -323,7 +314,6 @@ input, select, textarea {
 }
 
 
-/* ---- Scrollbar ---- */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -343,7 +333,6 @@ input, select, textarea {
 }
 
 
-/* ---- Validação de formulário (UC02 - campos obrigatórios destacados) ---- */
 .campo-invalido,
 .campo-invalido .p-inputtext,
 .campo-invalido .p-select,
@@ -364,7 +353,6 @@ input, select, textarea {
 }
 
 
-/* ---- Lista de itens repetíveis (medicamentos de uso contínuo e itens de receita) ---- */
 .campo-com-acao {
   display: flex;
   align-items: center;

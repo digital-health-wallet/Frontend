@@ -40,7 +40,6 @@ export class ReceitaFormComponent implements OnChanges {
   orientacoes = '';
   carregando = false;
 
-  /** RF09 - uma receita comporta vários medicamentos, cada um com posologia própria. */
   itens: ItemFormulario[] = [novoItem()];
   submetido = false;
   arquivoBase64: string | null = null;

@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { AgendamentoService, AgendamentoRequest } from 'src/app/core/services/agendamento.service';
 import { ProfissionalService } from '@core/services/profissional.service';

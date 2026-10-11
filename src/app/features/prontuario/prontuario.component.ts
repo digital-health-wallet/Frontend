@@ -128,7 +128,6 @@ export class ProntuarioComponent implements OnInit {
     this.prontuarioForm.get('fichaEmergencialAtiva')?.setValue(!current);
   }
 
-  /** Campo obrigatório não preenchido e já tocado pelo usuário (UC02 - destaque em vermelho). */
   campoInvalido(campo: string): boolean {
     const controle = this.prontuarioForm.get(campo);
     return !!controle && controle.invalid && controle.touched;

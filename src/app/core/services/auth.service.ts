@@ -36,7 +36,6 @@ export class AuthService {
     );
   }
 
-  // Envia o JWT atual em "state" para o backend vincular o Calendar à conta já logada em vez de criar uma nova.
   iniciarLoginGoogle(): void {
     const state = this.getToken();
     const query = state ? `?state=${encodeURIComponent(state)}` : '';
@@ -59,7 +58,6 @@ export class AuthService {
     try {
       sessionStorage.removeItem('bannerGoogleDispensado');
     } catch {
-      // Sem armazenamento de sessão não há o que limpar.
     }
     this.router.navigate(['/login']);
   }

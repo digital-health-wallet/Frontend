@@ -47,8 +47,7 @@ export class AgendamentosComponent implements OnInit {
 
   googleDesconectado = signal(false);
 
-  // A dispensa vale enquanto a aba estiver aberta: sem isso o aviso reaparecia a
-  // cada volta para a tela, já que o componente é recriado a cada navegação.
+
   bannerGoogleDispensado = signal(AgendamentosComponent.leuDispensa());
 
   private static leuDispensa(): boolean {
@@ -73,8 +72,6 @@ export class AgendamentosComponent implements OnInit {
     try {
       sessionStorage.setItem('bannerGoogleDispensado', 'true');
     } catch {
-      // Armazenamento indisponível (janela anônima, por exemplo): o aviso volta
-      // na próxima navegação, mas a tela continua funcionando.
     }
   }
 
@@ -169,7 +166,6 @@ toggleFiltroFavoritos() {
     return agendamento.status === 'CANCELADO';
   }
 
-  /** UC04 - Fluxo Alternativo 1: o cancelamento exige confirmação do usuário. */
   cancelarConsulta(agendamento: AgendamentoResumo): void {
     this.confirmationService.confirm({
       header: 'Cancelar consulta',
@@ -201,7 +197,6 @@ toggleFiltroFavoritos() {
           );
         },
         error: (err) => {
-          // Recarrega para desfazer a troca otimista feita pelo select.
           this.carregarAgendamentos();
           this.messageService.add({
             severity: 'error',
@@ -217,7 +212,6 @@ toggleFiltroFavoritos() {
     const selecionados = this.agendamentos().filter(ag => ag.selecionado);
     if (selecionados.length === 0) return;
 
-    // UC04 - Fluxo Alternativo 2: só consultas finalizadas ou canceladas são arquiváveis.
     const naoArquivaveis = selecionados.filter(ag => !this.finalizada(ag) && !this.cancelada(ag));
     if (naoArquivaveis.length > 0) {
       this.messageService.add({
