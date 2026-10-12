@@ -25,7 +25,7 @@
     <div class="form-group">
       <label class="label">Nome da medicação *</label>
       <div class="campo-com-acao">
-        <input type="text" class="input-field" placeholder="Ex: PraCurá 500mg, Pasta D'água 120mg"
+        <input type="text" class="input-field" placeholder="Ex: Dipirona 500mg"
                [(ngModel)]="item.medicacao" [name]="'medicacao' + $index"
                [class.campo-invalido]="submetido && !item.medicacao" />
         @if (itens.length > 1) {
