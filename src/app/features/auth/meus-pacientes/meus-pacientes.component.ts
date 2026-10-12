@@ -42,9 +42,14 @@ export class MeusPacientesComponent implements OnInit {
     });
   }
 
+  /**
+   * Abre o paciente já cadastrado direto na agenda, que é o uso do dia a dia. O
+   * formulário do prontuário fica no perfil, pela barra lateral, para quando
+   * houver algo a corrigir — repeti-lo a cada acesso não faria sentido.
+   */
   gerenciar(paciente: Paciente): void {
     this.pacienteService.selecionarPaciente(paciente);
-    this.router.navigate(['/paciente/gerenciar']);
+    this.router.navigate(['/agendamentos']);
   }
 
   cadastrarPaciente(): void {
