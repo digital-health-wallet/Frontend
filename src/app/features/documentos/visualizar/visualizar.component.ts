@@ -1,4 +1,5 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentosService } from '../../../core/services/documentos.service';
@@ -94,6 +95,25 @@ export class VisualizarComponent implements OnInit {
     });
   }
 
+
+  /**
+   * Exibe o anexo num diálogo na própria página, em vez de abrir aba nova: uma
+   * data URI em target="_blank" é bloqueada por padrão em boa parte dos
+   * navegadores (política de navegação de nível superior para data:), e a aba
+   * abre em branco sem nenhum aviso — foi o que aconteceu ao testar.
+   */
+  anexoEmVisualizacao = signal<SafeResourceUrl | null>(null);
+  anexoEhImagem = signal(true);
+  private sanitizer = inject(DomSanitizer);
+
+  visualizarAnexo(base64: string): void {
+    this.anexoEhImagem.set(base64.startsWith('data:image'));
+    this.anexoEmVisualizacao.set(this.sanitizer.bypassSecurityTrustResourceUrl(base64));
+  }
+
+  fecharVisualizacaoAnexo(): void {
+    this.anexoEmVisualizacao.set(null);
+  }
 
   editarExame(exame: Exame): void {
     this.exameEmEdicao.set(exame);

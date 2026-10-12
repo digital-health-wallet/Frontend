@@ -152,3 +152,14 @@
   color: var(--text-muted); 
   font-size: var(--font-size-sm); 
 }
+.anexo-imagem {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.anexo-iframe {
+  width: 100%;
+  height: 70vh;
+  border: none;
+}

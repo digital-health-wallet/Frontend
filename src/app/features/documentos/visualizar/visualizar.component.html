@@ -32,7 +32,7 @@
               <span class="item-data">{{ item.observacoes }}</span>
             }
             @if (item.uploads && item.uploads.length > 0) {
-              <a [href]="item.uploads[0].base64" target="_blank" class="link-anexo">
+              <a href="javascript:void(0)" (click)="visualizarAnexo(item.uploads[0].base64)" class="link-anexo">
                 <i class="pi pi-paperclip"></i> Ver anexo
               </a>
             }
@@ -70,7 +70,7 @@
               <span class="item-data">{{ item.orientacoesGerais }}</span>
             }
             @if (item.uploads && item.uploads.length > 0) {
-              <a [href]="item.uploads[0].base64" target="_blank" class="link-anexo">
+              <a href="javascript:void(0)" (click)="visualizarAnexo(item.uploads[0].base64)" class="link-anexo">
                 <i class="pi pi-paperclip"></i> Ver anexo
               </a>
             }
@@ -156,5 +156,22 @@
   styleClass="modal-agendamento">
   @if (diagnosticoEmEdicao()) {
     <app-diagnostico-form [diagnosticoParaEditar]="diagnosticoEmEdicao()" (aoSalvar)="aoSalvarDiagnostico()"></app-diagnostico-form>
+  }
+</p-dialog>
+
+<p-dialog
+  header="Anexo"
+  [visible]="!!anexoEmVisualizacao()"
+  (visibleChange)="fecharVisualizacaoAnexo()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '90vw', maxWidth: '700px' }">
+  @if (anexoEmVisualizacao()) {
+    @if (anexoEhImagem()) {
+      <img [src]="anexoEmVisualizacao()" alt="Anexo" class="anexo-imagem" />
+    } @else {
+      <iframe [src]="anexoEmVisualizacao()" class="anexo-iframe" title="Anexo"></iframe>
+    }
   }
 </p-dialog>
