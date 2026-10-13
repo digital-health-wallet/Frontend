@@ -18,7 +18,6 @@ export class EmergenciaComponent implements OnInit {
   ficha = signal<EmergenciaResponse | null>(null);
   carregando = signal(true);
 
-  /** UC06 - Fluxo Alternativo: paciente autorizou a ficha, mas não possui comorbidades. */
   semCondicoesRelatadas = computed(() => {
     const f = this.ficha();
     return !!f && !f.alergias.length && !f.diagnosticosCronicos.length

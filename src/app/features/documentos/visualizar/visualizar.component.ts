@@ -95,13 +95,6 @@ export class VisualizarComponent implements OnInit {
     });
   }
 
-
-  /**
-   * Exibe o anexo num diálogo na própria página, em vez de abrir aba nova: uma
-   * data URI em target="_blank" é bloqueada por padrão em boa parte dos
-   * navegadores (política de navegação de nível superior para data:), e a aba
-   * abre em branco sem nenhum aviso — foi o que aconteceu ao testar.
-   */
   anexoEmVisualizacao = signal<SafeResourceUrl | null>(null);
   anexoEhImagem = signal(true);
   private sanitizer = inject(DomSanitizer);

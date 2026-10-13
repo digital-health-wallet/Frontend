@@ -56,7 +56,6 @@ export class NovoAgendamentoComponent {
     { label: 'Emergência', value: 'EMERGENCIA' }
   ];
 
-  //Google
   exibirModalGoogle = false;
   carregandoGoogle = false;
   sugestoesGoogle: any[] = [];

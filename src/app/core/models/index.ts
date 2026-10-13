@@ -51,7 +51,6 @@ export interface Paciente {
   ativo?: boolean;
 }
 
-// Retorno de GET/PUT /api/pacientes/{id} e POST /api/pacientes/prontuario: não traz idUsuario, mas já inclui a alergia atual.
 export interface PacienteResponse {
   id: number;
   nome: string;
@@ -130,7 +129,6 @@ export interface ItemReceita {
 
 export type TipoAlergia = 'M' | 'A';
 
-/** RF10 - uma alergia do histórico do paciente. */
 export interface AlergiaResumo {
   id?: number;
   tipo?: TipoAlergia;
