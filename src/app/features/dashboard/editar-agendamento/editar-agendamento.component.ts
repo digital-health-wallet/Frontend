@@ -43,15 +43,23 @@ export class EditarAgendamentoComponent implements OnInit {
   especialidadesOpcoes = [
     { label: 'Alergista', value: 'Alergista' },
     { label: 'Cardiologista', value: 'Cardiologista' },
+    { label: 'Cirurgião-Plástico', value: 'Cirurgião-Plástico' },
     { label: 'Dermatologista', value: 'Dermatologista' },
     { label: 'Endocrinologista', value: 'Endocrinologista' },
+    { label: 'Fisioterapeuta', value: 'Fisioterapeuta' },
     { label: 'Gastroenterologista', value: 'Gastroenterologista' },
-    { label: 'Ortopedista', value: 'Ortopedista' },
-    { label: 'Pediatra', value: 'Pediatra' },
-    { label: 'Psiquiatra', value: 'Psiquiatra' },
-    { label: 'Urologista', value: 'Urologista' },
     { label: 'Ginecologista', value: 'Ginecologista' },
-    { label: 'Cirurgião-Plástico', value: 'Cirurgião-Plástico' }
+    { label: 'Neurologista', value: 'Neurologista' },
+    { label: 'Nutricionista', value: 'Nutricionista' },
+    { label: 'Oftalmologista', value: 'Oftalmologista' },
+    { label: 'Ortopedista', value: 'Ortopedista' },
+    { label: 'Otorrinolaringologista', value: 'Otorrinolaringologista' },
+    { label: 'Pediatra', value: 'Pediatra' },
+    { label: 'Pneumologista', value: 'Pneumologista' },
+    { label: 'Psicólogo', value: 'Psicólogo' },
+    { label: 'Psiquiatra', value: 'Psiquiatra' },
+    { label: 'Reumatologista', value: 'Reumatologista' },
+    { label: 'Urologista', value: 'Urologista' },
   ];
 
   tiposConsultaOpcoes = [
