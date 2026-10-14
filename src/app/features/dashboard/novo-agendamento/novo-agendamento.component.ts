@@ -106,6 +106,17 @@ onProfissionalChange(): void {
   if (prof?.especialidade) {
     this.especialidade = prof.especialidade;
   }
+
+  const partesEndereco = [
+    prof?.endereco?.logradouro,
+    prof?.endereco?.numero,
+    prof?.endereco?.bairro,
+    prof?.endereco?.cidade
+  ].filter((parte: string | undefined) => !!parte);
+
+  this.endereco = [prof?.nomeClinica, partesEndereco.join(', ')]
+      .filter((parte) => !!parte)
+      .join(', ');
 }
 
   salvar(): void {

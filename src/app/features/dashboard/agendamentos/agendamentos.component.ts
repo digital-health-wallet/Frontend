@@ -113,7 +113,8 @@ export class AgendamentosComponent implements OnInit {
 }
 
 getStatusClassById(id: number): string {
-  const ag = this.agendamentos().find(a => a.id === id);
+  const ag = this.agendamentos().find(a => a.id === id)
+      ?? this.agendamentosArquivados().find(a => a.id === id);
   const status = ag?.status ?? 'AGENDADO';
   const map: Record<string, string> = {
     CONFIRMADO: 'confirmada',
