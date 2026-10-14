@@ -104,17 +104,7 @@ export class NovoAgendamentoComponent {
 onProfissionalChange(): void {
   const prof = this.profissionaisList.find(p => p.id === this.idProfissionalSelecionado);
   this.especialidade = prof?.especialidade ?? '';
-
-  const partesEndereco = [
-    prof?.endereco?.logradouro,
-    prof?.endereco?.numero,
-    prof?.endereco?.bairro,
-    prof?.endereco?.cidade
-  ].filter((parte: string | undefined) => !!parte);
-
-  this.endereco = [prof?.nomeClinica, partesEndereco.join(', ')]
-      .filter((parte) => !!parte)
-      .join(', ');
+  this.endereco = prof?.nomeClinica ?? '';
 }
 
   salvar(): void {
