@@ -165,14 +165,16 @@
 }
 
 <p-dialog
-  [(visible)]="exibirModal" 
-  [modal]="true" 
-  [draggable]="false" 
+  [(visible)]="exibirModal"
+  [modal]="true"
+  [draggable]="false"
   [resizable]="false"
   styleClass="modal-agendamento"
-  appendTo="body">
-  
-  <app-novo-agendamento 
+  appendTo="body"
+  (onHide)="novoAgendamentoRef.limparFormulario()">
+
+  <app-novo-agendamento
+     #novoAgendamentoRef
      (salvoComSucesso)="fecharModalERecarregar()">
   </app-novo-agendamento>
   
